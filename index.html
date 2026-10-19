@@ -517,7 +517,7 @@ function listen(){sb.channel('orbit-kv').on('postgres_changes',{event:'*',schema
 /* login */
 async function login(){const p=tmp.lw;if(!p)return toast('Pick who you are');if(!tmp.pw)return toast('Enter the password');
  const{data,error}=await sb.auth.signInWithPassword({email:p=='a'?CFG.EMAIL_A:CFG.EMAIL_B,password:tmp.pw});
- if(error){tmp.err='Wrong password, try again';return r()}tmp.pw='';tmp.err='';await enter(data.session.user.email)}
+ if(error){console.error(error);tmp.err='Couldn’t sign in: '+(error.message||'unknown error');return r()}tmp.pw='';tmp.err='';await enter(data.session.user.email)}
 async function enter(email){S.me=email==CFG.EMAIL_A?'a':'b';S.paired=true;tmp.loading=true;r();await load();listen();tmp.loading=false;
  r();if(window.Notification&&Notification.permission=='granted')enablePush(true)}
 /* push */
