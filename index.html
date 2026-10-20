@@ -1490,6 +1490,12 @@ input[type=time].inp::-webkit-datetime-edit-text {
 .live .rb { width: 44px; height: 44px; font-size: 22px; }
 .live .tg button { min-width: 0; }
 .live > svg { display: block; flex: none; }
+.chatpg { display: flex; flex-direction: column; gap: 14px; min-height: calc(100dvh - 148px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px)); }
+.chatlist { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; gap: 8px; min-width: 0; }
+.chatlist .bub { display: block; width: fit-content; max-width: 82%; height: auto; min-height: 0; overflow: visible; white-space: normal; overflow-wrap: anywhere; word-break: normal; flex: none; }
+.chatlist .bub.me { align-self: flex-end; }
+.chatlist .bub.th { align-self: flex-start; }
+.chatlist .bub .m { display: block; margin-top: 2px; }
 .live .mut { line-height: 1.2; min-height: 1.2em; }
 .live .tg { width: 100%; }
 .cv { font-size: 28px; font-weight: 800; line-height: 1; min-width: 44px; text-align: center; }
@@ -1694,10 +1700,10 @@ pv:v=>{tmp.view=+v;tmp.pc=null},pvx:()=>{tmp.view=null;tmp.pc=null},pask:v=>{tmp
 pdel:v=>{const g=S.gallery.find(x=>x.id==+v);if(!g||g.by!=S.me)return;delImg(g.img);S.gallery=S.gallery.filter(x=>x!==g);tmp.view=null;tmp.pc=null;toast('Photo deleted')},
 signout:async()=>{await sb.auth.signOut();location.reload()},push:()=>{enablePush()}};
 const CHIPS=['Miss you','Proud of you','Water time','Call me'];
-function chat(){const ot=oth();return`<div class="row sp"><div><h1>Our <em>chat</em></h1><div class="mut">just you and ${N[ot]}</div></div><button data-a="who" aria-label="Switch to ${N[ot]}’s phone">${av(ot)}</button></div>
-<div class="col" style="gap:8px">${S.chat.length?S.chat.map(m=>`<div class="bub ${m.f==S.me?'me':'th'}">${esc(m.x)}<span class="m">${m.f==S.me?'You':N[m.f]} · ${m.t}</span></div>`).join(''):`<div class="live" style="padding:6px 0"><div style="width:190px">${SC.chat}</div><span class="mut">Say hi to ${N[ot]}</span></div>`}</div>
+function chat(){const ot=oth();return`<div class="chatpg"><div class="row sp"><div><h1>Our <em>chat</em></h1><div class="mut">just you and ${N[ot]}</div></div><button data-a="who" aria-label="Switch to ${N[ot]}’s phone">${av(ot)}</button></div>
+<div class="chatlist">${S.chat.length?S.chat.map(m=>`<div class="bub ${m.f==S.me?'me':'th'}">${esc(m.x)}<span class="m">${m.f==S.me?'You':N[m.f]} · ${m.t}</span></div>`).join(''):`<div class="live" style="padding:6px 0"><div style="width:190px">${SC.chat}</div><span class="mut">Say hi to ${N[ot]}</span></div>`}</div>
 <div class="chps">${CHIPS.map(c=>`<button class="chp" data-a="chat:${c}">${c}</button>`).join('')}</div>
-<div class="rrow"><input class="inp rin" data-i="ct" placeholder="Write something sweet…" value="${esc(tmp.ct||'')}"><button class="rb" data-a="chat" aria-label="Send">↑</button></div>`}
+<div class="rrow"><input class="inp rin" data-i="ct" placeholder="Write something sweet…" value="${esc(tmp.ct||'')}"><button class="rb" data-a="chat" aria-label="Send">↑</button></div></div>`}
 const NV=[['today','home','Today'],['asks','list','Asks'],['chat','chat','Chat'],['ping','heart','Ping'],['week','chart','Week']];
 function r(){const app=document.getElementById('app');document.documentElement.dataset.who=S.me;{const m=document.querySelector('meta[name=theme-color]');if(m)m.content=S.me=='a'?'#380000':'#FBE48F'}if(!S.paired){app.innerHTML=pair();return}
 app.classList.toggle('enter',tmp.scr!=tmp.last);tmp.last=tmp.scr;const act={eat:'today',sleep:'today',wrap:'today',gal:'today',sent:'ping'}[tmp.scr]||tmp.scr;let h='';
