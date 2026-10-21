@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#380000"><link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="icon-180.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Orbit"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#FFE9F1"><link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="icon-180.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Orbit"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Orbit</title>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
 <style>
@@ -68,6 +68,7 @@ body {
   padding: 18px 18px 130px;
   min-height: 100dvh;
   display: grid;
+  grid-template-columns: minmax(0,1fr);
   gap: 14px;
   align-content: start;
 }
@@ -1495,7 +1496,10 @@ input[type=time].inp::-webkit-datetime-edit-text {
 .chatlist .bub { display: block; width: fit-content; max-width: 82%; height: auto; min-height: 0; overflow: visible; white-space: normal; overflow-wrap: anywhere; word-break: normal; flex: none; }
 .chatlist .bub.me { align-self: flex-end; }
 .chatlist .bub.th { align-self: flex-start; }
-.chatlist .bub .m { display: block; margin-top: 2px; }
+.chatlist .bub .m { display: block; width: 100%; margin: 2px 0 0; padding: 0; text-indent: 0; text-align: left; justify-self: stretch; }
+.chatlist .bub.me .m { text-align: right; }
+.inp.wi { background: #FFF8DC; color: #5A0F1E; border-color: transparent; }
+.inp.wi::placeholder { color: #8A4A5C; opacity: 1; }
 .live .mut { line-height: 1.2; min-height: 1.2em; }
 .live .tg { width: 100%; }
 .cv { font-size: 28px; font-weight: 800; line-height: 1; min-width: 44px; text-align: center; }
@@ -1514,15 +1518,59 @@ input[type=time].inp::-webkit-datetime-edit-text {
 @keyframes bun { 0%, 100% { transform: none; } 18%, 72% { transform: translate(-4px, -30px) rotate(-14deg); } }
 @keyframes ktc { 0%, 22% { stroke-dashoffset: 100; } 58%, 100% { stroke-dashoffset: 0; } }
 @keyframes kdrop { 0%, 15% { opacity: 0; transform: translateY(-14px); } 30% { opacity: 1; } 55% { opacity: 0; transform: translateY(12px); } 100% { opacity: 0; } }
+.zsc { overflow: hidden; min-width: 0; }
 .zsc svg { width: 100%; height: auto; display: block; }
 .zsc text { fill: var(--ink); }
 .inp.tm { text-align: center; }
-.sl2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.sl2 { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 8px; }
 .sl2 .live { background: none; border: 0; box-shadow: none; padding: 0; }
 .sl2 .zsc { width: 100%; }
-.sl2 .inp.tm { background: none; border: 0; box-shadow: none; padding: 0; font-size: 30px; font-weight: 800; letter-spacing: -.01em; width: auto; }
-.sl2 .zsc svg { overflow: visible; }
+.sl2 .inp.tm { max-width: 100%; min-width: 0; background: none; border: 0; box-shadow: none; padding: 0; font-size: 22px; font-weight: 800; letter-spacing: -.01em; width: 100%; }
 
+
+/* ---- Kanan: super-light pink theme (matches the pink / yellow / maroon animations) ---- */
+:root[data-who="a"] {
+  --bg: #FFEAF1; --bg2: #FFF6F9; --card: #FFFAFC; --ink: #5A0F1E; --mut: #93384F;
+  --nav: #5A0F1E; --line: rgba(90,15,30,.12); --sh: 0 10px 28px rgba(214,90,130,.18);
+  color-scheme: light;
+}
+:root[data-who="a"] body {
+  background: radial-gradient(100% 50% at 100% 0%,rgba(255,226,140,.38),transparent 62%),radial-gradient(110% 55% at 0% 100%,rgba(247,150,185,.34),transparent 64%),linear-gradient(165deg,#FFE3EC 0%,#FFF3F7 100%) fixed;
+}
+:root[data-who="a"] body::before { opacity: .35; }
+:root[data-who="a"] h1 em { color: #C2285C; }
+:root[data-who="a"] .nav button { color: #FFE9EE; }
+:root[data-who="a"] .nav button.on { color: #5A0F1E; }
+:root[data-who="a"] .nav button.on::after { background: #5A0F1E; }
+:root[data-who="a"] .c:not(.pk):not(.pk2):not(.yl):not(.br),
+:root[data-who="a"] .it,
+:root[data-who="a"] .dc:not(.on),
+:root[data-who="a"] .q button[style*="background:var(--card)"] {
+  background: rgba(255,255,255,.78) !important;
+  border: 1px solid rgba(255,255,255,.9);
+  box-shadow: 0 6px 18px rgba(214,90,130,.12);
+}
+:root[data-who="a"] .c.pk,
+:root[data-who="a"] .c.pk2,
+:root[data-who="a"] .mood[style*="--pink2"],
+:root[data-who="a"] .q button[style*="--pink"] {
+  background: linear-gradient(155deg,#FFD9E5,#FBBBD0) !important;
+  border: 1px solid rgba(255,255,255,.7);
+  box-shadow: 0 8px 20px rgba(214,90,130,.2);
+}
+:root[data-who="a"] .c.br:not(.stack):not(.pk) {
+  background: linear-gradient(160deg,#8A1C30,#4A0813);
+  color: #FFEDEE;
+  box-shadow: 0 10px 24px rgba(90,15,30,.28);
+}
+:root[data-who="a"] .c.br:not(.stack) .mut { color: #F3C3CC; }
+:root[data-who="a"] .c.yl:not(.pk) { box-shadow: 0 8px 20px rgba(230,170,60,.22); }
+:root[data-who="a"] .bub.th { background: #fff; box-shadow: 0 4px 12px rgba(214,90,130,.14); }
+:root[data-who="a"] .pill.ln, :root[data-who="a"] .pill.ghost { color: #5A0F1E !important; background: rgba(255,255,255,.7); border: 1.5px solid rgba(90,15,30,.25); }
+:root[data-who="a"] .ban { background: #5A0F1E; color: #FFE9EE; }
+:root[data-who="a"] .ban .mut { color: #F3C3CC; opacity: 1; }
+:root[data-who="a"] .inp { background: #fff; color: #5A0F1E; border-color: rgba(90,15,30,.12); }
+:root[data-who="a"] .inp::placeholder { color: #A86A7C; opacity: 1; }
 </style>
 </head>
 <body>
@@ -1621,7 +1669,7 @@ function sleep(){const l=L(),r=days.map(d=>hrs(L(S.me,D(d))));return`${head('Sle
 <button class="pill" data-a="saved">Save sleep</button>`}
 
 function wrap(){const l=L();return`${head('What did you <em>watch</em>?')}
-<div class="c yl"><div class="row">${fl('#FFF8DC',44,'book')}<b>Tonight’s watch</b></div><input class="inp" data-i="watched" placeholder="A show, a movie, anything…" value="${esc(l.watched)}"></div><button class="pill" data-a="saved">Save it</button>`}
+<div class="c yl"><div class="row">${fl('#FFF8DC',44,'book')}<b>Tonight’s watch</b></div><input class="inp wi" data-i="watched" placeholder="A show, a movie, anything…" value="${esc(l.watched)}"></div><button class="pill" data-a="saved">Save it</button>`}
 
 function asks(){const me=S.me,ot=oth(),mine=S.asks.filter(a=>a.to==me),theirs=S.asks.filter(a=>a.from==me),sc=p=>{const s=score(p);return`<div class="c ${p=='a'?'pk':'yl'}"><div class="row">${av(p,34)}<b>${N[p]}</b></div><div style="font-size:22px;font-weight:800">${s.k} kept · ${s.m} missed</div></div>`};
 return`<div class="row sp"><h1>Asks <em>&amp; proof</em></h1><button data-a="who" aria-label="Switch phone">${av(ot)}</button></div>
@@ -1647,7 +1695,7 @@ return`<div><h1>Our <em>week</em></h1><div class="mut">${days[0].toLocaleDateStr
 <h2>Keeping each other honest</h2><div class="g2">${sc('a')}${sc('b')}</div>
 <div class="c"><b>Water, glasses a day</b><div class="row" style="align-items:flex-end">${days.map((d,i)=>`<div class="bc${i==6?' hl':''}"><div class="bp"><i style="height:${Math.min(R('a')[i].water,10)*11}px"></i><i style="height:${Math.min(R('b')[i].water,10)*11}px"></i></div>${'SMTWTFS'[d.getDay()]}</div>`).join('')}</div><div class="row mut"><span style="width:12px;height:12px;border-radius:4px;background:var(--pink2)"></span>${N.a}<span style="width:12px;height:12px;border-radius:4px;background:var(--yel)"></span>${N.b}</div></div>
 <div class="c"><b>Sleep, hours a night</b><div class="row" style="align-items:flex-end">${days.map((d,i)=>{const ha=hrs(R('a')[i]),hb=hrs(R('b')[i]);return`<div class="bc${i==6?' hl':''}"><div class="bp"><i style="height:${sh(ha)}px"></i><i style="height:${sh(hb)}px"></i></div>${'SMTWTFS'[d.getDay()]}<span style="display:flex;gap:3px;font-size:10px;line-height:1.2"><span style="border-bottom:2px solid var(--pink2)">${hl(ha)}</span><span style="border-bottom:2px solid var(--yel)">${hl(hb)}</span></span></div>`}).join('')}</div>
-<div style="display:grid;grid-template-columns:repeat(4,auto);justify-content:space-between;gap:8px 10px;align-items:center;border-top:1px solid var(--line);padding-top:12px;white-space:nowrap"><span></span><span class="mut">Avg sleep</span><span class="mut">Avg bed</span><span class="mut">Avg wake</span>${['a','b'].map(p=>`<span class="row" style="gap:6px"><span style="width:12px;height:12px;border-radius:4px;background:${p=='a'?'var(--pink2)':'var(--yel)'}"></span><b>${N[p]}</b></span><b>${avg(p)}</b><b>${mean(p,'bed')}</b><b>${mean(p,'wake')}</b>`).join('')}</div></div>
+<div style="display:grid;grid-template-columns:repeat(4,auto);justify-content:space-between;gap:8px 6px;font-size:13.5px;align-items:center;border-top:1px solid var(--line);padding-top:12px;white-space:nowrap"><span></span><span class="mut">Avg sleep</span><span class="mut">Avg bed</span><span class="mut">Avg wake</span>${['a','b'].map(p=>`<span class="row" style="gap:6px"><span style="width:12px;height:12px;border-radius:4px;background:${p=='a'?'var(--pink2)':'var(--yel)'}"></span><b>${N[p]}</b></span><b>${avg(p)}</b><b>${mean(p,'bed')}</b><b>${mean(p,'wake')}</b>`).join('')}</div></div>
 <div class="c"><b>McDonald’s days</b>${dots('a','var(--pink2)')}${dots('b','var(--yel)')}</div>
 <div class="g2"><div class="c yl"><span class="mut">Coffee cups</span><b style="font-size:26px">${R('a').reduce((s,l)=>s+l.coffee.length,0)} / ${R('b').reduce((s,l)=>s+l.coffee.length,0)}</b></div><div class="c pk"><span class="mut">No shower</span><b style="font-size:26px">${R('a').filter(l=>l.shower===false).length} / ${R('b').filter(l=>l.shower===false).length}</b></div></div>
 <div class="g2"><div class="c"><span class="mut">Photos sent</span><b style="font-size:26px">${S.asks.filter(a=>a.proof).length}</b></div><div class="c br"><span class="mut">In our grid</span><b style="font-size:26px">${S.gallery.length}</b></div></div>
@@ -1737,7 +1785,7 @@ async function hydrate(){const els=[...document.querySelectorAll('img[data-p]:no
 function warm(p){if(!blobs.has(p))blobs.set(p,(async()=>{const{data,error}=await sb.storage.from('photos').download(p);if(error)throw error;return data})().catch(e=>{blobs.delete(p);throw e}));return blobs.get(p)}
 async function keepPhoto(v){try{const b=v=='pp'?dataBlob(tmp.pp):await warm(v),f=new File([b],`orbit-${Date.now()}.jpg`,{type:'image/jpeg'});
  if(navigator.canShare&&navigator.canShare({files:[f]}))await navigator.share({files:[f]});else{const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=f.name;a.click()}}catch(e){if(e.name!='AbortError')toast('Couldn’t save the photo')}}
-const _r=r;r=function(){_r();if(tmp.scr=='chat')scrollTo(0,document.body.scrollHeight);hydrate();document.querySelectorAll('[data-save]').forEach(b=>warm(b.dataset.save).catch(()=>{}))};
+const _r=r;r=function(){_r();{const tc=document.querySelector('meta[name=theme-color]');if(tc)tc.content=S.me=='a'?'#FFE9F1':'#FBE48F'}if(tmp.scr=='chat')scrollTo(0,document.body.scrollHeight);hydrate();document.querySelectorAll('[data-save]').forEach(b=>warm(b.dataset.save).catch(()=>{}))};
 /* ===== Orbit sync (Supabase) ===== */
 const sb=supabase.createClient(CFG.SUPABASE_URL,CFG.SUPABASE_ANON_KEY);
 const synced=new Map(),mine=new Map(),EMP=JSON.stringify(E());
