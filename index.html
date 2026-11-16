@@ -3,15 +3,29 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#FFE9F1"><link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="icon-180.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Orbit"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#FFE9F1">
+<link rel="apple-touch-icon" href="icon-180.png"><meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Orbit">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Orbit</title>
+<link rel="manifest" href="manifest.webmanifest">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="config.js?v=2"></script>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
 <style>
-/* Orbit styles. Rules were consolidated: superseded declarations, duplicate @keyframes
-   and dead variables removed; cascade order unchanged.
-   Theme: data-who="a" (dark maroon) / "b" (warm yellow), set on <html> in r().
-   Tuning knobs: pink-tile opacity = :root[data-who="a"] .c.pk (.88/.82);
-   maroon-tile opacity = the 86% in :root[data-who="a"] .c:not(...). */
+/*
+ * ORBIT | SINGLE-FILE EDITION
+ * =============================================================
+ * QUICK MAP
+ *   1. Base design tokens, global elements and UI components
+ *   2. Book covers, paper, photo album and animations
+ * CSS is intentionally kept in its original cascade order. Moving
+ * overlapping selectors can change the design even when their
+ * declarations look identical. Edit CURRENT THEME for colours.
+ * User a; user b .
+ */
+
 :root {
   --bg: #FFF8DC;
   --card: #FFFDF3;
@@ -60,7 +74,7 @@ html {
 body {
   margin: 0;
   color: var(--ink);
-  font: 500 16px/1.35 'Bricolage Grotesque',system-ui,sans-serif;
+  font: 500 16px/1.35 "Bricolage Grotesque",system-ui,sans-serif;
 }
 #app {
   max-width: 430px;
@@ -102,7 +116,7 @@ h2 {
   font-weight: 800;
 }
 em {
-  font-family: 'Instrument Serif',Georgia,serif;
+  font-family: "Instrument Serif",Georgia,serif;
   font-style: italic;
   font-weight: 400;
   font-size: 1.14em;
@@ -803,7 +817,7 @@ h1 em {
   display: block;
 }
 .scp {
-  font: 800 18px 'Bricolage Grotesque',sans-serif;
+  font: 800 18px "Bricolage Grotesque",sans-serif;
   margin-top: 4px;
 }
 @keyframes pull {
@@ -1527,7 +1541,6 @@ input[type=time].inp::-webkit-datetime-edit-text {
 .sl2 .zsc { width: 100%; }
 .sl2 .inp.tm { max-width: 100%; min-width: 0; background: none; border: 0; box-shadow: none; padding: 0; font-size: 22px; font-weight: 800; letter-spacing: -.01em; width: 100%; }
 
-
 /* ---- Kanan: super-light pink theme (matches the pink / yellow / maroon animations) ---- */
 :root[data-who="a"] {
   --bg: #FFEAF1; --bg2: #FFF6F9; --card: #FFFAFC; --ink: #5A0F1E; --mut: #93384F;
@@ -1571,22 +1584,679 @@ input[type=time].inp::-webkit-datetime-edit-text {
 :root[data-who="a"] .ban .mut { color: #F3C3CC; opacity: 1; }
 :root[data-who="a"] .inp { background: #fff; color: #5A0F1E; border-color: rgba(90,15,30,.12); }
 :root[data-who="a"] .inp::placeholder { color: #A86A7C; opacity: 1; }
+
+/* books */
+.shelf { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 20px 18px; perspective: 1100px; padding: 6px 2px 14px; }
+.bk { position: relative; aspect-ratio: 3/4; border: 0; padding: 0; background: none; text-align: left; transition: transform .25s; }
+.bk:active { transform: scale(.97); }
+.bkg { grid-column: 1/-1; aspect-ratio: auto; height: 118px; }
+.bks { position: absolute; inset: 0 auto 0 0; width: 14px; border-radius: 6px 0 0 6px; background: rgba(0,0,0,.22); z-index: 1; }
+.bkc { position: absolute; inset: 0; border-radius: 6px 16px 16px 6px; padding: 18px 16px 16px 28px; display: grid; align-content: space-between; transform-origin: left center; box-shadow: 6px 8px 18px rgba(0,0,0,.28), inset -3px 0 6px rgba(0,0,0,.15); color: #5A0F1E; backface-visibility: hidden; }
+.bkc::after { content: ""; position: absolute; right: 18px; top: 0; width: 12px; height: 42px; background: #E5384F; clip-path: polygon(0 0,100% 0,100% 100%,50% 78%,0 100%); }
+.bkc i { font: italic 28px/1.05 "Instrument Serif", serif; padding-top: 30px; }
+.bkc small { font-weight: 700; font-size: 12px; opacity: .7; }
+.bka .bkc { background: linear-gradient(150deg,#FFC9DB,#F59CB8); }
+.bkb .bkc { background: linear-gradient(150deg,#FFF0A8,#F6CF55); }
+.bkg .bkc { background: linear-gradient(150deg,#8A1C30,#4A0813); color: #FFE9EE; }
+.bk.opening { z-index: 3; animation: bkcent .65s ease-in-out both; }
+.bk.opening::before { content: ""; position: absolute; inset: 3px 3px 3px 12px; background: #FFFDF3; border-radius: 4px 12px 12px 4px; }
+.bk.opening .bkc { animation: bkopen .65s ease-in both; }
+@keyframes bkopen { to { transform: perspective(900px) rotateY(-165deg); } }
+@keyframes bkcent { to { transform: scale(1.08); } }
+.bookwrap { display: grid; gap: 12px; perspective: 1400px; }
+.paper { background: #FFFBE6; color: #5A0F1E; border-radius: 6px 22px 22px 6px; padding: 22px 20px 26px 30px; min-height: 66dvh; box-shadow: 0 14px 34px rgba(0,0,0,.18), inset 12px 0 14px -8px rgba(0,0,0,.16); display: grid; gap: 14px; align-content: start; transform-origin: left center; overflow: hidden; }
+:root[data-who="a"] .paper { background: #FFF1F6; }
+.paper .mut { color: #8A2A38; }
+.paper .live { color: #5A0F1E; }
+.paper .rb.lt { background: #fff; border: 1px solid rgba(90,15,30,.15); color: #5A0F1E; }
+.paper.tf { animation: turnin .6s cubic-bezier(.2,.8,.2,1) both; }
+.paper.tb { transform-origin: right center; animation: turnback .6s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes turnin { from { transform: rotateY(-85deg); opacity: .2; filter: brightness(.7); } to { transform: none; } }
+@keyframes turnback { from { transform: rotateY(70deg); opacity: .2; } to { transform: none; } }
+.ir { display: flex; align-items: center; gap: 8px; border-bottom: 1px solid rgba(90,15,30,.08); }
+.il { flex: 1; display: flex; align-items: baseline; gap: 8px; min-width: 0; padding: 12px 0; background: none; border: 0; color: inherit; text-align: left; font-size: 17px; }
+.il .pn { font: italic 20px "Instrument Serif", serif; width: 22px; opacity: .55; }
+.il .dl { flex: 1; border-bottom: 2px dotted rgba(90,15,30,.22); min-width: 10px; }
+.il .mut { font-size: 13px; max-width: 38%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bellb { width: 40px; height: 40px; flex: none; border-radius: 50%; border: 0; background: #F6CF55; color: #5A0F1E; display: grid; place-items: center; }
+:root[data-who="b"] .bellb { background: #F7C0D0; }
+.bkbar { display: flex; align-items: center; gap: 10px; }
+.quote { font-size: 20px; font-weight: 700; line-height: 1.3; }
+
+/* ---- scrapbook layer ---- */
+#app { position: relative; z-index: 1; }
+.bgd { position: fixed; inset: 0; pointer-events: none; z-index: 0; background-size: 220px 220px; animation: drift 70s linear infinite; }
+:root[data-who="a"] .bgd { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cg fill='%23fff' fill-opacity='.7'%3E%3Cellipse cx='40' cy='26' rx='5' ry='9' transform='rotate(0 40 40)'/%3E%3Cellipse cx='40' cy='26' rx='5' ry='9' transform='rotate(60 40 40)'/%3E%3Cellipse cx='40' cy='26' rx='5' ry='9' transform='rotate(120 40 40)'/%3E%3Cellipse cx='40' cy='26' rx='5' ry='9' transform='rotate(180 40 40)'/%3E%3Cellipse cx='40' cy='26' rx='5' ry='9' transform='rotate(240 40 40)'/%3E%3Cellipse cx='40' cy='26' rx='5' ry='9' transform='rotate(300 40 40)'/%3E%3C/g%3E%3Ccircle cx='40' cy='40' r='6' fill='%23FFE27A'/%3E%3Cpath d='M160 40l4 10 11 1-8 7 3 11-10-6-10 6 3-11-8-7 11-1z' fill='%23FFE27A' fill-opacity='.85'/%3E%3Cpath d='M100 150a9 9 0 0 1 0-18 11 11 0 0 1 21-2 10 10 0 0 1 10 10 8 8 0 0 1-3 10z' fill='none' stroke='%23fff' stroke-opacity='.8' stroke-width='3'/%3E%3Cpath d='M20 170q10-12 20 0t20 0t20 0' fill='none' stroke='%23E56F96' stroke-opacity='.45' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M170 130v14M163 137h14' stroke='%23fff' stroke-opacity='.8' stroke-width='3' stroke-linecap='round'/%3E%3Ccircle cx='190' cy='190' r='4' fill='%23fff' fill-opacity='.7'/%3E%3Ccircle cx='80' cy='95' r='3' fill='%23E56F96' fill-opacity='.4'/%3E%3C/svg%3E"); }
+:root[data-who="b"] .bgd { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Ccircle cx='40' cy='40' r='9' fill='%23fff' fill-opacity='.55'/%3E%3Cpath d='M150 30l4 9 10 1-7 7 2 10-9-5-9 5 2-10-7-7 10-1z' fill='%23F7C0D0' fill-opacity='.8'/%3E%3Cpath d='M20 150l10-12 10 12 10-12 10 12 10-12' fill='none' stroke='%23E0A21B' stroke-opacity='.5' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M130 140v14M123 147h14' stroke='%23fff' stroke-opacity='.75' stroke-width='3' stroke-linecap='round'/%3E%3Ccircle cx='100' cy='90' r='4' fill='%23E0A21B' fill-opacity='.35'/%3E%3Ccircle cx='190' cy='180' r='6' fill='%23fff' fill-opacity='.6'/%3E%3C/svg%3E"); }
+@keyframes drift { to { background-position: 220px 220px; } }
+.shelf { position: relative; padding-bottom: 26px; }
+.shelf::after { content: ""; grid-column: 1/-1; height: 16px; margin: 0 -6px; border-radius: 16px; background: linear-gradient(#F0C29C,#CF9264); box-shadow: 0 10px 16px rgba(120,60,20,.25); }
+.bka { rotate: -2deg; animation: bob 4.4s ease-in-out infinite; }
+.bkb { rotate: 2deg; animation: bob 4.4s ease-in-out -2.2s infinite; }
+@keyframes bob { 0%, 100% { translate: 0 0; } 50% { translate: 0 -5px; } }
+.bks { left: -10px; width: 30px; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='22'%3E%3Crect x='3' y='6' width='24' height='9' rx='4.5' fill='none' stroke='%23333' stroke-width='3'/%3E%3Crect x='3' y='5' width='24' height='9' rx='4.5' fill='none' stroke='%23fff' stroke-opacity='.45' stroke-width='1'/%3E%3Ccircle cx='24' cy='11' r='2.6' fill='%23000' fill-opacity='.4'/%3E%3C/svg%3E") repeat-y; border-radius: 0; z-index: 5; }
+.bkc { border-radius: 8px 22px 22px 8px; display: grid; align-content: center; padding: 14px; overflow: visible; }
+.bkc::after { display: none; }
+.bka .bkc { background: radial-gradient(rgba(255,255,255,.75) 3px, transparent 3.6px) 0 0/22px 22px, linear-gradient(150deg,#FFC9DB,#F59CB8); }
+.bkb .bkc { background: repeating-linear-gradient(135deg,#FFE27A 0 14px,#FFF0A8 14px 28px); }
+.bkg .bkc { background: radial-gradient(rgba(255,255,255,.14) 2px, transparent 2.6px) 0 0/16px 16px, linear-gradient(150deg,#8A1C30,#4A0813); }
+.bkg { height: 150px; }
+.bkc::before { content: ""; position: absolute; inset: 0; border-radius: inherit; background: radial-gradient(120% 60% at 20% 0, rgba(255,255,255,.4), transparent 55%); pointer-events: none; }
+.tp { position: absolute; top: 12px; right: -12px; width: 76px; height: 20px; rotate: 38deg; z-index: 3; background: repeating-linear-gradient(45deg,#FFC2D6 0 8px,#fffa 8px 16px); box-shadow: 0 2px 4px rgba(0,0,0,.15); }
+.bkb .tp { background: repeating-linear-gradient(45deg,#F7C0D0 0 8px,#fffa 8px 16px); right: auto; left: -12px; rotate: -38deg; }
+.bkg .tp { background: repeating-linear-gradient(45deg,#FFE27A 0 8px,#fffa 8px 16px); }
+.lbl { position: relative; z-index: 2; margin: 18px 6px; padding: 10px 12px; background: #FFFDF3; border: 2px dashed rgba(90,15,30,.28); border-radius: 12px; rotate: -2deg; box-shadow: 0 4px 8px rgba(0,0,0,.18); color: #5A0F1E; display: grid; gap: 2px; }
+.lbl i { font: italic 24px/1.05 "Instrument Serif", serif; padding: 0; }
+.lbl small { font-weight: 700; font-size: 11px; opacity: .65; }
+.d { position: absolute; z-index: 1; }
+.d1 { right: 10px; bottom: 10px; width: 50px; } .d2 { left: 26px; bottom: 12px; width: 30px; rotate: -12deg; } .d3 { right: 14px; top: 34px; width: 56px; }
+.bkb .d3 { top: auto; bottom: 30px; right: 64px; width: 52px; }
+.bkg .d1 { width: 54px; right: 14px; bottom: 12px; }
+.bkg .lbl { margin: 0 70px 0 6px; align-self: center; }
+.po { position: absolute; top: -16px; width: 56px; height: 66px; background: #fff; border-radius: 3px; box-shadow: 0 3px 8px rgba(0,0,0,.25); z-index: 0; }
+.po::after { content: ""; position: absolute; inset: 5px 5px 16px; background: linear-gradient(135deg,#F7C0D0,#FFE27A); }
+.p1 { left: 38px; rotate: -8deg; } .p2 { left: 100px; rotate: 6deg; } .p2::after { background: linear-gradient(135deg,#C9E58B,#7CC8EE); }
+.bookwrap { position: relative; }
+.bookwrap::before { content: ""; position: absolute; left: -9px; top: 22px; bottom: 30px; width: 30px; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='22'%3E%3Crect x='3' y='6' width='24' height='9' rx='4.5' fill='none' stroke='%23333' stroke-width='3'/%3E%3Crect x='3' y='5' width='24' height='9' rx='4.5' fill='none' stroke='%23fff' stroke-opacity='.45' stroke-width='1'/%3E%3Ccircle cx='24' cy='11' r='2.6' fill='%23000' fill-opacity='.4'/%3E%3C/svg%3E") repeat-y; z-index: 6; }
+.paper { border-radius: 8px 26px 26px 8px; padding: 34px 20px 28px 38px; background-image: radial-gradient(rgba(245,156,184,.4) 1.6px, transparent 2.2px); background-size: 22px 22px; }
+:root[data-who="b"] .paper { background-image: radial-gradient(rgba(246,207,85,.55) 1.6px, transparent 2.2px); }
+.paper::before, .paper::after { content: ""; position: absolute; top: 0; width: 84px; height: 22px; opacity: .92; background: repeating-linear-gradient(45deg,#FFC2D6 0 8px,#fff9 8px 16px); }
+.paper::before { left: 30px; rotate: -4deg; }
+.paper::after { right: 22px; rotate: 5deg; background: repeating-linear-gradient(-45deg,#FFE27A 0 8px,#fff9 8px 16px); }
+.il { border-radius: 40px; padding: 8px 10px; } .il:active { background: rgba(245,156,184,.25); }
+.il .pn { width: 30px; height: 30px; flex: none; border-radius: 50%; display: grid; place-items: center; font: 800 13px "Bricolage Grotesque", sans-serif; color: #5A0F1E; background: #F59CB8; outline: 2px dashed rgba(255,255,255,.85); outline-offset: -4px; opacity: 1; rotate: -6deg; box-shadow: 0 2px 0 rgba(90,15,30,.18); }
+.ir:nth-child(even) .pn { rotate: 6deg; }
+:root[data-who="b"] .il .pn { background: #F6CF55; }
+.il .dl { border-bottom: 2px dotted #F59CB8; } :root[data-who="b"] .il .dl { border-color: #F6CF55; }
+.ir { border: 0; }
+.bellb { animation: ring 2.6s ease-in-out infinite; transform-origin: 50% 15%; box-shadow: 0 5px 10px rgba(120,30,60,.2); }
+@keyframes ring { 0%, 55%, 100% { rotate: 0deg; } 60% { rotate: 16deg; } 66% { rotate: -14deg; } 72% { rotate: 10deg; } 78% { rotate: -6deg; } 84% { rotate: 0deg; } }
+.pill:active, .rb:active { transform: scale(.92,1.06); }
+.bookwrap { filter: drop-shadow(0 12px 14px rgba(150,40,80,.2)); }
+.alb { background-color: #FBF1DE; background-image: radial-gradient(rgba(190,140,90,.4) 1.6px, transparent 2.2px); }
+.alb .gg { gap: 16px; }
+.alb .gt { background: #fff; padding: 6px 6px 22px; border-radius: 4px; box-shadow: 0 6px 12px rgba(80,40,20,.22); position: relative; overflow: visible; height: auto; aspect-ratio: auto; }
+.alb .gt:nth-child(odd) { rotate: -2.5deg; } .alb .gt:nth-child(even) { rotate: 2deg; }
+.alb .gt::before { content: ""; position: absolute; top: -9px; left: 50%; translate: -50% 0; width: 46px; height: 16px; rotate: -3deg; z-index: 2; background: repeating-linear-gradient(45deg,#FFC2D6 0 6px,#fff9 6px 12px); }
+.alb .gt:nth-child(3n)::before { background: repeating-linear-gradient(-45deg,#FFE27A 0 6px,#fff9 6px 12px); }
+.alb .gt img { border-radius: 2px; }
+:root[data-who] .alb { background-color: #FBF1DE; background-image: radial-gradient(rgba(190,140,90,.4) 1.6px, transparent 2.2px); }
+
+/* album flipping */
+.stage { position: relative; perspective: 1500px; }
+.stage > .paper { min-height: 56dvh; }
+.leaf { position: absolute !important; inset: 0; z-index: 4; transform-origin: left center; backface-visibility: hidden; }
+.leaf.fo { animation: lfo .75s cubic-bezier(.5,0,.3,1) both; }
+.leaf.fi { animation: lfi .75s cubic-bezier(.3,0,.5,1) both; }
+@keyframes lfo { to { transform: rotateY(-172deg); filter: brightness(.82); } }
+@keyframes lfi { from { transform: rotateY(-172deg); filter: brightness(.82); } to { transform: none; } }
+.alb .gg { display: grid; grid-template-columns: 1fr 1fr; gap: 20px 14px; align-content: start; }
+.alb .gt img { position: static; display: block; width: 100%; height: auto; aspect-ratio: 1/1; object-fit: cover; }
+.alb .cap { position: absolute; left: 0; right: 0; bottom: 3px; text-align: center; font: 700 11px "Bricolage Grotesque", sans-serif; color: #8A5A3A; }
+.albnav { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.addp { display: grid; place-items: center; cursor: pointer; }
+
+/* faint floating back pill */
+.fback { position: fixed; left: 14px; bottom: calc(14px + env(safe-area-inset-bottom, 0px)); z-index: 30; display: flex; align-items: center; gap: 5px; height: 42px; padding: 0 16px 0 12px; border: 0; border-radius: 99px; background: rgba(255,255,255,.3); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); color: #5A0F1E; opacity: .5; font: 700 13px "Bricolage Grotesque", sans-serif; box-shadow: 0 2px 8px rgba(90,15,30,.08); transition: opacity .2s; }
+.fback span { font-size: 22px; line-height: 1; margin-top: -2px; }
+.fback:active { opacity: .95; }
+
+/* Refreshed palette: richer colors and a completely clean background. */
+:root[data-who="a"] { --bg:#E8B6C7; --bg2:#E8B6C7; --card:#F4D5DF; --pink:#D96B91; --pink2:#C9507D; --yel:#E8BD53; --ink:#491023; --mut:#79344B; --nav:#59152D; --line:rgba(73,16,35,.22); --sh:0 7px 18px rgba(73,16,35,.17); }
+:root[data-who="b"] { --bg:#E3C268; --bg2:#E3C268; --card:#F1D88D; --pink:#DC8BA6; --pink2:#CA668A; --yel:#DDAF3C; --ink:#491023; --mut:#78402E; --nav:#59152D; --line:rgba(73,16,35,.22); --sh:0 7px 18px rgba(73,16,35,.17); }
+:root[data-who="a"] body, :root[data-who="b"] body { background:var(--bg) !important; }
+body::before, .bgd { display:none !important; background:none !important; animation:none !important; }
+:root[data-who="a"] .c:not(.pk):not(.pk2):not(.yl):not(.br),
+:root[data-who="a"] .it, :root[data-who="a"] .dc:not(.on),
+:root[data-who="a"] .q button[style*="background:var(--card)"] { background:var(--card) !important; border:1px solid var(--line); box-shadow:var(--sh); }
+:root[data-who="a"] .c.pk, :root[data-who="a"] .c.pk2,
+:root[data-who="a"] .mood[style*="--pink2"], :root[data-who="a"] .q button[style*="--pink"] { background:#D985A3 !important; border:1px solid rgba(73,16,35,.15); box-shadow:var(--sh); color:#491023; }
+:root[data-who="b"] .c.pk, :root[data-who="b"] .c.pk2 { background:#D985A3 !important; }
+.c.yl, :root[data-who="a"] .c.yl:not(.pk) { background:#E1B84F !important; }
+.c.br, :root[data-who="a"] .c.br:not(.stack):not(.pk) { background:#70213B !important; }
+:root[data-who="a"] .bub.th { background:#F4D5DF; }
+:root[data-who="a"] .inp { background:#F7E4EA; }
+:root[data-who="a"] .pill.ln, :root[data-who="a"] .pill.ghost { background:#F4D5DF; }
+:root[data-who="a"] .paper { background:#F2DCE3; }
+:root[data-who="a"] h1 em { color:#8E214E; }
+:root[data-who="b"] h1 em { color:#8E214E; }
+
+/* Consistent book dimensions, in-page navigation, rich individual page colours. */
+.bookwrap .book-page { height: min(74dvh, 710px); min-height: 510px; max-height: min(74dvh, 710px); display:flex; flex-direction:column; gap:0; padding:22px 20px 22px 36px; background-image:none !important; color:#FFF5F2; border:1px solid rgba(255,255,255,.16); }
+.bookwrap .book-page::before,.bookwrap .book-page::after { display:none !important; }
+.book-page-nav { display:flex; align-items:center; justify-content:space-between; gap:8px; padding:0 0 15px; margin-bottom:14px; border-bottom:1px solid rgba(255,255,255,.3); flex:none; position:relative; z-index:2; }
+.book-nav-button { background:rgba(255,255,255,.18); border:1px solid rgba(255,255,255,.3); color:inherit; border-radius:99px; padding:9px 15px; font-weight:800; font-size:14px; }
+.book-page-label { font-size:12px; font-weight:800; opacity:.85; text-align:right; }
+.book-page-content { min-height:0; overflow-y:auto; overflow-x:hidden; overscroll-behavior:contain; scrollbar-width:thin; scrollbar-color:rgba(255,255,255,.5) transparent; display:grid; gap:14px; align-content:start; padding:2px 3px 12px 0; flex:1; }
+.book-page .mut, .book-page .paper .mut { color:rgba(255,245,242,.82); }
+.book-page .live,.book-page .zsc text { color:inherit; fill:currentColor; }
+.book-page .ir { border-color:rgba(255,255,255,.3); }
+.book-page .ir .mut { color:rgba(255,255,255,.8); }
+.book-page .rb.lt { background:rgba(255,255,255,.2); color:#fff; border:1px solid rgba(255,255,255,.35); }
+.book-page .rb.pp { background:#F2B6C8; color:#4A1027; }
+.book-page .inp,.book-page textarea { background:rgba(255,255,255,.94); color:#48152B; }
+.book-page .inp::placeholder,.book-page textarea::placeholder { color:#80566A; }
+.book-page .pill.lt { background:#F4D5DF; color:#491023; }
+.book-page .cv,.book-page .big { color:inherit; }
+.book-page.page-index { background:#59243F !important; }
+.book-page.page-water { background:#214F66 !important; }
+.book-page.page-coffee { background:#6A3B2B !important; }
+.book-page.page-mcd { background:#7B3E35 !important; }
+.book-page.page-shower { background:#295B58 !important; }
+.book-page.page-meals { background:#69445F !important; }
+.book-page.page-sleep { background:#353E70 !important; }
+.book-page.page-watch { background:#6D3458 !important; }
+.book-page.page-day { background:#65502B !important; }
+@media(max-height:650px){.bookwrap .book-page {height:76dvh; min-height:360px; max-height:76dvh;}}
+
+/* Calm, person-owned book themes: page subjects add only a whisper of colour. */
+:root[data-who="a"] { --book-base:#F0D9E1; --book-ink:#542638; --book-muted:#805568; --book-accent:157,75,111; --book-border:rgba(100,43,69,.16); }
+:root[data-who="b"] { --book-base:#F0E1B9; --book-ink:#543D2A; --book-muted:#816A4A; --book-accent:150,108,43; --book-border:rgba(109,79,39,.17); }
+.bookwrap .book-page {
+  color:var(--book-ink) !important;
+  background:linear-gradient(145deg,rgba(var(--subject-tint),.095),transparent 48%,rgba(var(--book-accent),.055)),var(--book-base) !important;
+  border:1px solid var(--book-border) !important;
+  box-shadow:0 12px 30px rgba(45,25,35,.12),inset 12px 0 16px -12px rgba(52,29,36,.16) !important;
+}
+.book-page.page-index { --subject-tint:125,91,108; }
+.book-page.page-water { --subject-tint:67,128,159; }
+.book-page.page-coffee { --subject-tint:131,91,68; }
+.book-page.page-mcd { --subject-tint:168,117,63; }
+.book-page.page-shower { --subject-tint:75,137,129; }
+.book-page.page-meals { --subject-tint:157,111,105; }
+.book-page.page-sleep { --subject-tint:89,102,153; }
+.book-page.page-watch { --subject-tint:142,102,143; }
+.book-page.page-day { --subject-tint:132,121,91; }
+.book-page .mut,.book-page .paper .mut,.book-page .ir .mut { color:var(--book-muted) !important; }
+.book-page-nav { border-bottom:1px solid var(--book-border); }
+.book-nav-button { background:rgba(255,255,255,.33); border:1px solid var(--book-border); color:var(--book-ink); }
+.book-page .ir { border-color:var(--book-border); }
+.book-page .rb.lt { background:rgba(255,255,255,.38); color:var(--book-ink); border:1px solid var(--book-border); }
+.book-page .rb.pp { background:rgba(var(--book-accent),.19); color:var(--book-ink); }
+.book-page .pill.lt { background:rgba(255,255,255,.4); color:var(--book-ink); }
+.book-page .inp,.book-page textarea { background:rgba(255,255,255,.55); color:var(--book-ink); border-color:var(--book-border); }
+.book-page .inp::placeholder,.book-page textarea::placeholder { color:var(--book-muted); }
+.book-page .live,.book-page .zsc text { color:var(--book-ink); fill:currentColor; }
+.book-page-content { scrollbar-color:rgba(var(--book-accent),.3) transparent; }
+
+/* Visible but gentle subject gradients, always blended into the person's book theme. */
+:root[data-who="a"] { --book-base:#F1DCE5; --book-accent:171,87,123; }
+:root[data-who="b"] { --book-base:#F1E3C0; --book-accent:170,125,53; }
+.bookwrap .book-page {
+  background:
+    radial-gradient(ellipse 95% 66% at 88% 82%, rgba(var(--subject-tint),.29) 0%, rgba(var(--subject-tint),.12) 47%, transparent 78%),
+    radial-gradient(ellipse 90% 64% at 7% 7%, rgba(var(--book-accent),.19) 0%, transparent 76%),
+    linear-gradient(155deg,rgba(255,255,255,.24),transparent 70%),
+    var(--book-base) !important;
+}
+.book-page.page-water { --subject-tint:75,166,209; }
+.book-page.page-coffee { --subject-tint:150,104,79; }
+.book-page.page-mcd { --subject-tint:203,143,72; }
+.book-page.page-shower { --subject-tint:77,171,163; }
+.book-page.page-meals { --subject-tint:197,126,109; }
+.book-page.page-sleep { --subject-tint:108,124,193; }
+.book-page.page-watch { --subject-tint:162,115,169; }
+.book-page.page-day { --subject-tint:156,152,102; }
+
+/* Orbit refinement: richer, person-led colour, cleaner secondary screens */
+:root[data-who="a"] { --book-base:#E7B7CB; --book-ink:#502337; --book-muted:#79465D; --book-accent:157,65,104; --screen-base:#EEC5D4; --screen-surface:#F8E5EC; --screen-edge:#D998B3; --screen-deep:#742E4E; --screen-contrast:#FFF3F7; }
+:root[data-who="b"] { --book-base:#EACB80; --book-ink:#523C27; --book-muted:#80623C; --book-accent:155,101,43; --screen-base:#EED49B; --screen-surface:#FBF0D3; --screen-edge:#D6B46B; --screen-deep:#76502F; --screen-contrast:#FFF8E8; }
+:root[data-who="a"] body { background:linear-gradient(155deg,#E6AFC4 0%,#F3D4E0 52%,#DCA3BC 100%) fixed; }
+:root[data-who="b"] body { background:linear-gradient(155deg,#E7C26F 0%,#F6E3B3 52%,#DEB66A 100%) fixed; }
+
+.bookwrap .book-page {
+ background: radial-gradient(ellipse 115% 85% at 100% 100%,rgba(var(--subject-tint),.54) 0%,rgba(var(--subject-tint),.30) 38%,transparent 76%),radial-gradient(ellipse 95% 75% at 0% 0%,rgba(var(--book-accent),.28),transparent 80%),linear-gradient(150deg,rgba(255,255,255,.17),transparent 70%),var(--book-base)!important;
+ box-shadow:0 14px 34px rgba(66,27,41,.16),inset 10px 0 14px -12px rgba(55,25,40,.3)!important;
+}
+.book-page.page-water {--subject-tint:42,139,194;}
+.book-page.page-coffee {--subject-tint:132,79,49;}
+.book-page.page-mcd {--subject-tint:190,117,47;}
+.book-page.page-shower {--subject-tint:31,152,148;}
+.book-page.page-meals {--subject-tint:171,91,80;}
+.book-page.page-sleep {--subject-tint:86,95,170;}
+.book-page.page-watch {--subject-tint:140,77,153;}
+.book-page.page-day {--subject-tint:117,132,75;}
+.book-page.page-index {--subject-tint:161,93,122;}
+.book-page-nav {padding-bottom:16px;}
+.book-nav-button {background:rgba(255,255,255,.5);box-shadow:0 3px 10px rgba(55,30,45,.07);}
+.book-page .ir {background:rgba(255,255,255,.21);border:1px solid rgba(90,35,60,.11);border-radius:17px;padding:4px 12px;margin-bottom:7px;}
+.book-page .inp,.book-page textarea {background:rgba(255,255,255,.68);}
+/* Secondary views share the current person's colour family */
+body[data-screen="week"] #app,body[data-screen="asks"] #app,body[data-screen="ping"] #app,body[data-screen="chat"] #app {gap:17px;}
+body[data-screen="week"] .c,body[data-screen="asks"] .c {border-radius:24px;background:var(--screen-surface)!important;border:1px solid rgba(var(--book-accent),.14)!important;box-shadow:0 6px 16px rgba(55,27,36,.08)!important;color:var(--book-ink)!important;}
+body[data-screen="week"] .c.pk,body[data-screen="asks"] .c.pk {background:linear-gradient(145deg,#D68AA9,#EBC0D1)!important;color:#502337!important;}
+body[data-screen="week"] .c.yl,body[data-screen="asks"] .c.yl {background:linear-gradient(145deg,#DDB35A,#F2D99D)!important;color:#533923!important;}
+body[data-screen="week"] .c.br {background:linear-gradient(145deg,var(--screen-deep),color-mix(in srgb,var(--screen-deep) 78%,#000))!important;color:#fff!important;}
+body[data-screen="week"] .c.br .mut {color:rgba(255,255,255,.83)!important;}
+body[data-screen="week"] .c .mut,body[data-screen="asks"] .c .mut {color:inherit!important;opacity:.76;}
+body[data-screen="week"] h2,body[data-screen="asks"] h2 {font-size:17px;margin:5px 3px 0;letter-spacing:.01em;}
+body[data-screen="week"] .bp i {width:12px;border-radius:7px 7px 3px 3px;background:#C66590;}
+body[data-screen="week"] .bp i+i {background:#D8A73D;}
+body[data-screen="week"] .bc.hl {background:rgba(var(--book-accent),.09);}
+body[data-screen="week"] .bc {color:var(--book-muted);}
+body[data-screen="week"] .pill.lt {background:var(--screen-surface);color:var(--book-ink);border:1px solid var(--screen-edge)!important;}
+body[data-screen="asks"] .pill.pp {background:var(--screen-deep);color:#fff;}
+body[data-screen="asks"] .pill.ln {background:transparent;color:var(--book-ink)!important;border-color:var(--screen-edge);}
+body[data-screen="asks"] .c[data-sec] {padding:19px;gap:16px;}
+body[data-screen="chat"] .chatpg {background:linear-gradient(165deg,rgba(255,255,255,.30),rgba(var(--book-accent),.10));border:1px solid rgba(var(--book-accent),.18);border-radius:29px;padding:18px 14px 16px;min-height:calc(100dvh - 168px);}
+body[data-screen="chat"] .bub {box-shadow:0 3px 10px rgba(61,29,41,.08);line-height:1.45;}
+body[data-screen="chat"] .bub.me {background:var(--screen-deep);color:#fff;border-radius:19px 19px 5px 19px;}
+body[data-screen="chat"] .bub.th {background:var(--screen-surface);color:var(--book-ink);border-radius:19px 19px 19px 5px;}
+body[data-screen="chat"] .chp {background:var(--screen-surface);color:var(--book-ink);border:1px solid rgba(var(--book-accent),.2);}
+body[data-screen="chat"] .rrow {background:var(--screen-surface);border-radius:999px;padding:5px 5px 5px 9px;box-shadow:0 4px 15px rgba(61,29,41,.1);}
+body[data-screen="chat"] .rin {background:transparent!important;color:var(--book-ink);}
+body[data-screen="chat"] .rrow .rb {background:var(--screen-deep);color:#fff;}
+body[data-screen="ping"] .mood {min-height:174px;border:1px solid rgba(var(--book-accent),.15);border-radius:26px;padding:22px 24px;animation:none!important;box-shadow:0 7px 19px rgba(70,36,42,.1);color:var(--book-ink);}
+body[data-screen="ping"] .mood[data-a="ping:bored"] {background:linear-gradient(130deg,#E7C276,#F3DCAB)!important;}
+body[data-screen="ping"] .mood[data-a="ping:upset"] {background:linear-gradient(130deg,#C990B1,#E9C4D7)!important;}
+body[data-screen="ping"] .mood b {font-size:35px;}
+body[data-screen="ping"] .mood .fl {opacity:.26;animation:none;}
+body[data-screen="ping"] .mood .mut {color:var(--book-ink)!important;opacity:.82;}
+body[data-screen="ping"] .it {background:var(--screen-surface);border:1px solid rgba(var(--book-accent),.15);}
+@media(prefers-reduced-motion:reduce){.bookwrap .book-page{scroll-behavior:auto;}}
+
+/* Orbit: balanced, gender-neutral editorial treatment. Identity colours remain distinct. */
+:root[data-who="a"] {--book-base:#C7A1AD;--book-ink:#302632;--book-muted:#5E4856;--book-accent:112,65,82;--screen-base:#C5ADB5;--screen-surface:#E4D8DA;--screen-edge:#9F838D;--screen-deep:#493A4B;--screen-contrast:#F7F1EF;--card:#E4D8DA;--ink:#302632;--mut:#63535C;--nav:#3D3442;--pink:#C68EA5;--pink2:#BD819A;--yel:#D7B65D;}
+:root[data-who="b"] {--book-base:#C9B17F;--book-ink:#332F2A;--book-muted:#615442;--book-accent:122,95,51;--screen-base:#C9BA9B;--screen-surface:#E9E0CE;--screen-edge:#AC9B78;--screen-deep:#414B4B;--screen-contrast:#F8F3E8;--card:#E9E0CE;--ink:#332F2A;--mut:#635B4D;--nav:#364447;--pink:#C68EA5;--pink2:#BD819A;--yel:#D7B65D;}
+:root[data-who="a"] body {background:linear-gradient(155deg,#BA9CA7,#D7C2C7 52%,#BBA9B4) fixed!important;}
+:root[data-who="b"] body {background:linear-gradient(155deg,#BFAE89,#DCD0B3 52%,#B7B5A2) fixed!important;}
+:root[data-who] h1 em {color:var(--screen-deep)!important;}
+:root[data-who] .c:not(.pk):not(.pk2):not(.yl):not(.br),:root[data-who] .it,:root[data-who] .dc:not(.on){background:var(--screen-surface)!important;border:1px solid rgba(50,42,48,.13)!important;box-shadow:0 5px 18px rgba(40,35,40,.08)!important;}
+:root[data-who] .c.pk,:root[data-who] .c.pk2 {background:linear-gradient(145deg,#C78FA5,#D8B4BE)!important;color:#302632!important;border:1px solid rgba(60,45,50,.12)!important;}
+:root[data-who] .c.yl {background:linear-gradient(145deg,#CEAE62,#E1CD93)!important;color:#352F28!important;}
+:root[data-who] .c.br:not(.stack){background:linear-gradient(145deg,#4D4652,#353941)!important;color:#F8F3F2!important;}
+:root[data-who] .c.br .mut {color:#E4DDE0!important;}
+:root[data-who] .nav {background:rgba(48,47,51,.10);border:1px solid rgba(48,47,51,.15);}
+:root[data-who] .nav button {background:var(--nav);color:#F7F2ED;}
+:root[data-who] .nav button.on {background:var(--yel);color:#302D2C;}
+:root[data-who] .nav .plus {background:#B78B9E;color:#2D2630;}
+:root[data-who] .pill,:root[data-who] .rb {box-shadow:none;}
+:root[data-who] .pill.lt {background:var(--screen-surface);color:var(--book-ink);}
+:root[data-who] .pill.pp {background:#B78B9E;color:#2E2630;}
+:root[data-who] .pill.ln {color:var(--book-ink)!important;}
+:root[data-who] .c,:root[data-who] .it {border-radius:22px;}
+:root[data-who] .pill {border-radius:15px;}
+:root[data-who] .rb {border-radius:15px;}
+:root[data-who] .mood {border-radius:23px;}
+:root[data-who] .bookwrap .book-page {background:radial-gradient(ellipse 105% 82% at 98% 94%,rgba(var(--subject-tint),.40),rgba(var(--subject-tint),.15) 48%,transparent 78%),linear-gradient(155deg,rgba(255,255,255,.18),transparent 75%),var(--book-base)!important;color:var(--book-ink)!important;}
+:root[data-who] .book-nav-button {background:rgba(255,255,255,.36);color:var(--book-ink);}
+:root[data-who] .book-page .ir {background:rgba(255,255,255,.20);}
+:root[data-who] body[data-screen="week"] .c,:root[data-who] body[data-screen="asks"] .c {border-radius:20px;background:var(--screen-surface)!important;color:var(--book-ink)!important;}
+:root[data-who] body[data-screen="week"] .c.pk,:root[data-who] body[data-screen="asks"] .c.pk {background:linear-gradient(145deg,#B78B9E,#D4B6C1)!important;}
+:root[data-who] body[data-screen="week"] .c.yl,:root[data-who] body[data-screen="asks"] .c.yl {background:linear-gradient(145deg,#C6A85F,#E1D098)!important;}
+:root[data-who] body[data-screen="week"] .c.br {background:#45454E!important;color:#F8F4F2!important;}
+:root[data-who] body[data-screen="week"] .bp i {background:#A56F88;}
+:root[data-who] body[data-screen="week"] .bp i+i {background:#BCA05C;}
+:root[data-who] body[data-screen="chat"] .chatpg {background:rgba(255,255,255,.16);border-radius:22px;}
+:root[data-who] body[data-screen="chat"] .bub.me {background:var(--screen-deep);}
+:root[data-who] body[data-screen="chat"] .bub.th,:root[data-who] body[data-screen="chat"] .chp,:root[data-who] body[data-screen="chat"] .rrow {background:var(--screen-surface);}
+:root[data-who] body[data-screen="ping"] .mood[data-a="ping:bored"] {background:linear-gradient(140deg,#C9B477,#DED2AD)!important;}
+:root[data-who] body[data-screen="ping"] .mood[data-a="ping:upset"] {background:linear-gradient(140deg,#A88C9C,#D0B8BF)!important;}
+:root[data-who] body[data-screen="ping"] .mood {border-radius:22px;}
+:root[data-who] .av {animation:none;}
+
+/* Minimal clean-up: remove scrapbook doodles, washi tape and faux photo corners. */
+.bgd, .d, .dd, .tp, .po, .p1, .p2, .paper::before, .paper::after,
+.alb .gt::before, .alb .gt:nth-child(3n)::before { display:none !important; content:none !important; }
+.paper, .alb, :root[data-who] .alb { background-image:none !important; }
+.bka .bkc { background:linear-gradient(150deg,#CDA7B7,#B77D96) !important; }
+.bkb .bkc { background:linear-gradient(150deg,#E6D39B,#C5A75D) !important; }
+.bkg .bkc { background:linear-gradient(150deg,#66515D,#3D3948) !important; }
+.bkc::before { display:none !important; }
+.alb .gt { rotate:0deg !important; }
+.alb .gt:nth-child(odd), .alb .gt:nth-child(even) { rotate:0deg !important; }
+.lbl { rotate:0deg; border:0; box-shadow:none; background:rgba(255,255,255,.82); }
+
+/* Orbit lively-but-clean refinement: richer colour, no stickers/tape/doodles. */
+:root[data-who="a"] {--bg:#F2C6D5;--bg2:#E9B5C8;--card:#FFF0F4;--pink:#EBA6C0;--pink2:#D983A5;--yel:#F0C966;--ink:#51263A;--mut:#80546A;--nav:#623047;--line:rgba(92,40,64,.16);--sh:0 9px 25px rgba(111,39,77,.15);--book-base:#E9B6C9;--screen-surface:#F8E1E9;--screen-deep:#69364D;}
+:root[data-who="b"] {--bg:#EBD49B;--bg2:#DCC18A;--card:#FFF1CF;--pink:#E3B4A6;--pink2:#C98D80;--yel:#EBC35B;--ink:#49392D;--mut:#78604B;--nav:#4C514B;--line:rgba(83,71,42,.17);--sh:0 9px 25px rgba(92,76,41,.14);--book-base:#E8D3A0;--screen-surface:#F7E8C5;--screen-deep:#4C554F;}
+:root[data-who="a"] body {background:linear-gradient(155deg,#E8AFC4 0%,#F3D1DD 55%,#E8C0CF 100%) fixed!important;}
+:root[data-who="b"] body {background:linear-gradient(155deg,#D9BC79 0%,#F2DFB1 55%,#DCCB9C 100%) fixed!important;}
+:root[data-who] .c:not(.pk):not(.pk2):not(.yl):not(.br),:root[data-who] .it {background:var(--card)!important;border:1px solid var(--line)!important;box-shadow:var(--sh)!important;}
+:root[data-who] .c.pk,:root[data-who] .c.pk2 {background:linear-gradient(145deg,#E7A3BD,#D18BA9)!important;color:#51263A!important;box-shadow:var(--sh)!important;}
+:root[data-who="b"] .c.pk,:root[data-who="b"] .c.pk2 {background:linear-gradient(145deg,#E8B7A6,#D69B89)!important;color:#49392D!important;}
+:root[data-who] .c.yl {background:linear-gradient(145deg,#F3D982,#E8BC55)!important;color:#49392D!important;box-shadow:var(--sh)!important;}
+:root[data-who] .c.br:not(.stack) {background:linear-gradient(145deg,#76415B,#563248)!important;color:#FFF5F7!important;}
+:root[data-who="b"] .c.br:not(.stack) {background:linear-gradient(145deg,#586660,#3E4E4A)!important;color:#FFF8E9!important;}
+:root[data-who] .bookwrap .book-page {background:radial-gradient(ellipse 100% 82% at 95% 90%,rgba(var(--subject-tint),.70) 0%,rgba(var(--subject-tint),.43) 40%,transparent 79%),radial-gradient(ellipse 90% 75% at 4% 0%,rgba(var(--book-accent),.28),transparent 77%),linear-gradient(145deg,rgba(255,255,255,.30),transparent 70%),var(--book-base)!important;box-shadow:0 14px 35px rgba(76,37,55,.16)!important;}
+:root[data-who] .book-nav-button {background:rgba(255,255,255,.64)!important;border:1px solid rgba(90,50,65,.12);}
+:root[data-who] .book-page .ir {background:rgba(255,255,255,.38)!important;}
+:root[data-who] body[data-screen="week"] .c,:root[data-who] body[data-screen="asks"] .c {background:var(--card)!important;box-shadow:var(--sh)!important;}
+:root[data-who] body[data-screen="week"] .c.pk,:root[data-who] body[data-screen="asks"] .c.pk {background:linear-gradient(145deg,#E7A3BD,#D38FA9)!important;}
+:root[data-who] body[data-screen="week"] .c.yl,:root[data-who] body[data-screen="asks"] .c.yl {background:linear-gradient(145deg,#F3D982,#E6BC61)!important;}
+:root[data-who] body[data-screen="week"] .c.br {background:var(--screen-deep)!important;color:#FFF5EF!important;}
+:root[data-who] body[data-screen="week"] .bp i {background:#C36B96!important;}
+:root[data-who] body[data-screen="week"] .bp i+i {background:#D9A44C!important;}
+:root[data-who] body[data-screen="chat"] .chatpg {background:linear-gradient(150deg,rgba(255,255,255,.46),rgba(255,255,255,.19))!important;border:1px solid var(--line);box-shadow:var(--sh);}
+:root[data-who] body[data-screen="chat"] .bub.me {background:var(--screen-deep)!important;color:#fff!important;}
+:root[data-who] body[data-screen="chat"] .bub.th,:root[data-who] body[data-screen="chat"] .chp,:root[data-who] body[data-screen="chat"] .rrow {background:var(--card)!important;}
+:root[data-who] body[data-screen="ping"] .mood[data-a="ping:bored"] {background:linear-gradient(145deg,#F0CE79,#DDAA55)!important;}
+:root[data-who] body[data-screen="ping"] .mood[data-a="ping:upset"] {background:linear-gradient(145deg,#D7A3C5,#B982AC)!important;}
+:root[data-who] .pill,:root[data-who] .rb {box-shadow:0 5px 13px rgba(73,35,53,.13)!important;}
+:root[data-who] .nav {background:rgba(255,255,255,.22)!important;border:1px solid rgba(255,255,255,.4)!important;}
+:root[data-who] .nav button.on {background:#F2C967!important;}
+/* Keep all previously removed decoration absent. */
+.bgd,.d,.dd,.tp,.po,.p1,.p2,.paper::before,.paper::after,.bkc::before,.alb .gt::before,.alb .gt:nth-child(3n)::before {display:none!important;content:none!important;}
+
+/* Quiet scrapbook texture: low-opacity polka dots and diagonal stripes.
+   Both textures are transparent and preserve the two personal palettes. */
+:root[data-who="a"] { --pattern-ink: 105,48,77; }
+:root[data-who="b"] { --pattern-ink: 86,79,52; }
+/* Keep app backgrounds clean. Patterns belong exclusively to book paper. */
+:root[data-who] body {
+  background: linear-gradient(155deg,var(--bg),var(--bg2)) fixed !important;
+  background-size: cover !important;
+}
+/* Real book pages retain the activity-specific colour wash underneath the patterns. */
+:root[data-who] .bookwrap .book-page {
+  background-image:
+    radial-gradient(circle,rgba(var(--pattern-ink),.13) 1.15px,transparent 1.65px),
+    repeating-linear-gradient(135deg,transparent 0px,transparent 27px,rgba(var(--pattern-ink),.065) 27px,rgba(var(--pattern-ink),.065) 29px,transparent 29px,transparent 56px),
+    radial-gradient(ellipse 100% 82% at 95% 90%,rgba(var(--subject-tint),.70) 0%,rgba(var(--subject-tint),.43) 40%,transparent 79%),
+    radial-gradient(ellipse 90% 75% at 4% 0%,rgba(var(--book-accent),.28),transparent 77%),
+    linear-gradient(145deg,rgba(255,255,255,.30),transparent 70%) !important;
+  background-color:var(--book-base) !important;
+  background-size: 27px 27px, 112px 112px,cover,cover,cover !important;
+}
+/* Book paper only: ensure pattern layers remain visible above subject gradients. */
+:root[data-who] .bookwrap .paper.book-page {
+  background-image:
+    radial-gradient(circle,rgba(var(--pattern-ink),.16) 1.25px,transparent 1.75px),
+    repeating-linear-gradient(135deg,transparent 0 27px,rgba(var(--pattern-ink),.085) 27px 29px,transparent 29px 56px),
+    radial-gradient(ellipse 100% 82% at 95% 90%,rgba(var(--subject-tint),.70) 0%,rgba(var(--subject-tint),.43) 40%,transparent 79%),
+    radial-gradient(ellipse 90% 75% at 4% 0%,rgba(var(--book-accent),.28),transparent 77%),
+    linear-gradient(145deg,rgba(255,255,255,.30),transparent 70%) !important;
+  background-color:var(--book-base) !important;
+  background-size:27px 27px,112px 112px,cover,cover,cover !important;
+}
+/* Gallery book gets the same quiet texture without masking photos. */
+:root[data-who] .paper.alb:not(.book-page) {
+  background-image:
+    radial-gradient(circle,rgba(var(--pattern-ink),.10) 1px,transparent 1.6px),
+    repeating-linear-gradient(135deg,transparent 0 30px,rgba(var(--pattern-ink),.045) 30px 32px,transparent 32px 62px) !important;
+  background-size: 29px 29px,110px 110px !important;
+}
+
+/* Shelf cover restoration: pattern only, no tape, ribbon, doodles or stickers. */
+:root[data-who] .shelf .bka .bkc {
+  background: radial-gradient(circle,rgba(255,255,255,.58) 2.7px,transparent 3.3px) 0 0/22px 22px,
+              linear-gradient(150deg,#DFA9BD,#C67F9E) !important;
+}
+:root[data-who] .shelf .bkb .bkc {
+  background: repeating-linear-gradient(135deg,rgba(255,255,255,.18) 0 12px,rgba(255,255,255,0) 12px 26px),
+              linear-gradient(150deg,#F0D78D,#D8AD53) !important;
+}
+:root[data-who] .shelf .bkg .bkc {
+  background: radial-gradient(circle,rgba(255,233,238,.17) 2px,transparent 2.6px) 0 0/17px 17px,
+              linear-gradient(150deg,#8A1C30,#4A0813) !important;
+  color:#FFE9EE !important;
+}
+:root[data-who] .shelf .bkc::before,
+:root[data-who] .shelf .bkc::after,
+:root[data-who] .shelf .tp,
+:root[data-who] .shelf .d,
+:root[data-who] .shelf .dd,
+:root[data-who] .shelf .po,
+:root[data-who] .shelf .p1,
+:root[data-who] .shelf .p2 {display:none!important;content:none!important;}
+
+/* Coordinated cover-and-interior patterns, no tape or doodles. */
+:root[data-who] .bookwrap .paper.book-page {
+  background-color:var(--book-base) !important;
+  background-image:
+    radial-gradient(circle,rgba(var(--pattern-ink),.19) 1.8px,transparent 2.4px),
+    radial-gradient(ellipse 100% 82% at 95% 90%,rgba(var(--subject-tint),.70),rgba(var(--subject-tint),.40) 42%,transparent 79%),
+    radial-gradient(ellipse 90% 75% at 4% 0%,rgba(var(--book-accent),.30),transparent 77%) !important;
+  background-size:24px 24px,cover,cover !important;
+}
+:root[data-who="b"] .bookwrap .paper.book-page {
+  background-image:
+    repeating-linear-gradient(135deg,rgba(111,80,35,.105) 0 11px,transparent 11px 25px),
+    radial-gradient(ellipse 100% 82% at 95% 90%,rgba(var(--subject-tint),.70),rgba(var(--subject-tint),.40) 42%,transparent 79%),
+    radial-gradient(ellipse 90% 75% at 4% 0%,rgba(var(--book-accent),.30),transparent 77%) !important;
+  background-size:auto,cover,cover !important;
+}
+/* Album interior matches the original deep burgundy cover. */
+:root[data-who] .bookwrap .paper.alb:not(.book-page) {
+  background-color:#651324 !important;
+  background-image:
+    radial-gradient(circle,rgba(255,233,238,.18) 2px,transparent 2.7px),
+    linear-gradient(155deg,#8A1C30,#4A0813) !important;
+  background-size:18px 18px,cover !important;
+  color:#FFE9EE !important;
+}
+/* Simple, readable contents without numbering, dotted leaders or previews. */
+.book-page.page-index .il { align-items:center; justify-content:space-between; padding:12px 8px; }
+.book-page.page-index .index-chevron { margin-left:auto; font-size:23px; opacity:.6; line-height:1; }
+.book-page.page-index .pn,.book-page.page-index .dl {display:none!important;}
+
+/* Shelf-only: coordinated with the original burgundy photo album. */
+body[data-screen="shelf"] {
+  background: linear-gradient(155deg,#541323 0%,#6B2033 48%,#3E0C1B 100%) fixed !important;
+  color:#FFF0F1;
+}
+body[data-screen="shelf"]::before {display:none!important;}
+body[data-screen="shelf"] #app > div:first-child h1 {color:#FFF0F1;}
+body[data-screen="shelf"] #app > div:first-child h1 em {color:#F0A8BD;}
+body[data-screen="shelf"] #app > div:first-child .mut {color:#E8B7C5;}
+body[data-screen="shelf"] .dc:not(.on) {
+  background:rgba(255,236,241,.11)!important;
+  border:1px solid rgba(255,236,241,.23)!important;
+  color:#F1CAD4!important;
+}
+body[data-screen="shelf"] .dc:not(.on) b {color:#FFF0F1!important;}
+body[data-screen="shelf"] .dc.on {background:#E4B0C0!important;color:#4C1324!important;}
+body[data-screen="shelf"] .dc.on b {color:#4C1324!important;}
+body[data-screen="shelf"] .pill.lt {
+  background:rgba(255,235,241,.13)!important;
+  color:#FFF0F1!important;
+  border-color:rgba(255,235,241,.28)!important;
+}
+body[data-screen="shelf"] .shelf .bkc {box-shadow:6px 9px 22px rgba(16,0,7,.38),inset -3px 0 6px rgba(0,0,0,.12);}
+
+/* FIX: specificity must exceed :root[data-who] body background rule. */
+:root[data-who="a"] body[data-screen="shelf"],
+:root[data-who="b"] body[data-screen="shelf"] {
+  background: linear-gradient(155deg,#541323 0%,#6B2033 48%,#3E0C1B 100%) fixed !important;
+  background-color:#541323 !important;
+  color:#FFF0F1;
+}
+:root[data-who] body[data-screen="shelf"]::before {display:none!important;}
+:root[data-who] body[data-screen="shelf"] .mut {color:#E8B7C5;}
+:root[data-who] body[data-screen="shelf"] .dc:not(.on) {background:rgba(255,236,241,.11)!important;border-color:rgba(255,236,241,.23)!important;color:#F1CAD4!important;}
+:root[data-who] body[data-screen="shelf"] .dc:not(.on) b {color:#FFF0F1!important;}
+:root[data-who] body[data-screen="shelf"] .dc.on {background:#E4B0C0!important;color:#4C1324!important;}
+:root[data-who] body[data-screen="shelf"] .dc.on b {color:#4C1324!important;}
+
+/* Smoked Umber x Muted Ochre: homepage/shelf only. Book themes untouched. */
+:root[data-who="a"] body[data-screen="shelf"],
+:root[data-who="b"] body[data-screen="shelf"] {
+  background:linear-gradient(150deg,#493329 0%,#574033 48%,#35271F 100%) fixed !important;
+  background-color:#493329 !important;
+  color:#F8F0DB !important;
+}
+:root[data-who] body[data-screen="shelf"] h1,
+:root[data-who] body[data-screen="shelf"] #app > div:first-child h1 {color:#F8F0DB!important;}
+:root[data-who] body[data-screen="shelf"] h1 em {color:#D6BB70!important;}
+:root[data-who] body[data-screen="shelf"] .mut {color:#DDCEB4!important;}
+:root[data-who] body[data-screen="shelf"] .dc:not(.on) {
+ background:rgba(248,233,198,.085)!important;
+ border-color:rgba(184,155,74,.32)!important;
+ color:#E4D7BD!important;
+}
+:root[data-who] body[data-screen="shelf"] .dc:not(.on) b {color:#F8F0DB!important;}
+:root[data-who] body[data-screen="shelf"] .dc.on {
+ background:#B89B4A!important;color:#2F251D!important;border-color:#B89B4A!important;
+}
+:root[data-who] body[data-screen="shelf"] .dc.on b {color:#2F251D!important;}
+:root[data-who] body[data-screen="shelf"] .pill.lt {
+ background:rgba(184,155,74,.17)!important;color:#F8F0DB!important;
+ border-color:rgba(184,155,74,.44)!important;
+}
+:root[data-who] body[data-screen="shelf"] .nav button.on {
+ background:#B89B4A!important;color:#30241C!important;
+}
+:root[data-who] body[data-screen="shelf"] .shelf .bkc {
+ box-shadow:6px 9px 22px rgba(19,12,8,.42),inset -3px 0 6px rgba(0,0,0,.12);
+}
+
+/* Rijul's personal palette: Smoked Umber × Muted Ochre. */
+:root[data-who="b"] {
+ --bg:#493329; --bg2:#392920; --card:#F0E5CF;
+ --ink:#493329; --mut:#75604D; --nav:#493329;
+ --yel:#B89B4A; --pink:#D3BA8B; --pink2:#C6A46B;
+ --line:rgba(73,51,41,.18); --sh:0 10px 28px rgba(47,31,23,.18);
+ --book-base:#DCC9A3; --book-ink:#493329; --book-muted:#715A42;
+ --book-accent:184,155,74; --pattern-ink:73,51,41;
+ --screen-base:#D8C29A; --screen-surface:#F0E5CF;
+ --screen-edge:#B89B4A; --screen-deep:#493329; --screen-contrast:#FFF5DF;
+}
+:root[data-who="b"] body:not([data-screen="shelf"]) {
+ background:linear-gradient(150deg,#D3BF98,#E7D7B9 52%,#C4AA7C) fixed!important;
+}
+:root[data-who="b"] .shelf .bkb .bkc {
+ background:linear-gradient(155deg,#B89B4A 0%,#9E8140 50%,#493329 100%)!important;
+ color:#FFF3D8!important;
+}
+:root[data-who="b"] .shelf .bkb .bkc small {color:#FFF0D0!important;}
+:root[data-who="b"] .bookwrap .paper.book-page {
+ background-color:#DCC9A3!important;
+ color:#493329!important;
+}
+:root[data-who="b"] .bookwrap .paper.book-page .mut {color:#715A42!important;}
+:root[data-who="b"] .c.br:not(.stack) {
+ background:linear-gradient(145deg,#634B35,#493329)!important;
+ color:#FFF3D8!important;
+}
+:root[data-who="b"] .c.yl {
+ background:linear-gradient(150deg,#D8BF78,#B89B4A)!important;
+ color:#493329!important;
+}
+:root[data-who="b"] .nav button.on {background:#B89B4A!important;color:#30241C!important;}
+
+   
+:root {
+  --orbit-burgundy-top: #72243A;
+  --orbit-burgundy-mid: #5B172B;
+  --orbit-burgundy-bottom: #3D0D1D;
+  --orbit-nav-active: #E9B3C5;
+  --orbit-nav-ink: #4D1528;
+  --orbit-rijul-cover: #F4D986;
+  --orbit-rijul-stripe: #FFE6A0;
+  --orbit-rijul-ink: #493329;
+}
+
+/* Muted burgundy app canvas, shared by both people on every screen.
+   Keep individual book interiors and cards on their own palettes. */
+:root[data-who="a"] body,
+:root[data-who="b"] body,
+:root[data-who="a"] body[data-screen="shelf"],
+:root[data-who="b"] body[data-screen="shelf"],
+:root[data-who="b"] body:not([data-screen="shelf"]) {
+  background:linear-gradient(155deg,#633D49 0%,#69434E 48%,#52323E 100%) fixed !important;
+  background-color:#633D49 !important;
+}
+
+/* Legible headings against the burgundy canvas, without recolouring book paper. */
+:root[data-who] body #app > h1,
+:root[data-who] body #app > .row h1,
+:root[data-who] body #app > div:first-child h1 { color:#FFF2F0!important; }
+:root[data-who] body #app > div:first-child h1 em { color:#E9BBC9!important; }
+:root[data-who] body #app > div:first-child > .mut,
+:root[data-who] body #app > .mut {color:#F0D6DC!important;}
+:root[data-who] body[data-screen="shelf"] h1 em {color:#E9BBC9!important;}
+
+/* Rijul cover lettering, shared across viewers. */
+:root[data-who] .shelf .bkb .bkc small { color:#493329 !important; }
+
+/* App-wide canvas: a slightly deeper, softened version of the original album burgundy.
+   This overrides earlier app-background declarations without changing book covers/pages. */
+:root[data-who="a"] body,
+:root[data-who="b"] body,
+:root[data-who="a"] body[data-screen="shelf"],
+:root[data-who="b"] body[data-screen="shelf"],
+:root[data-who="a"] body:not([data-screen="shelf"]),
+:root[data-who="b"] body:not([data-screen="shelf"]) {
+  background: linear-gradient(155deg,var(--orbit-burgundy-top) 0%,var(--orbit-burgundy-mid) 52%,var(--orbit-burgundy-bottom) 100%) fixed !important;
+  background-color:var(--orbit-burgundy-mid) !important;
+}
+:root[data-who] body::before {display:none!important;}
+
+/* Shared app chrome is neutral burgundy, never inherited from either book theme. */
+:root[data-who] body .nav {
+  background:rgba(75,21,39,.93)!important;
+  border:1px solid rgba(255,226,235,.32)!important;
+  box-shadow:0 10px 28px rgba(30,4,15,.28)!important;
+}
+:root[data-who] body .nav button {
+  background:#713147!important;
+  color:#FFF0F2!important;
+}
+:root[data-who] body .nav button.on {
+  background:#E9B3C5!important;
+  color:#4D1528!important;
+}
+:root[data-who] body .nav .plus {
+  background:#C77996!important;
+  color:#FFF7F9!important;
+}
+:root[data-who] body .nav button.on::after {background:#4D1528!important;}
+:root[data-who] body .dc.on,
+:root[data-who] body[data-screen="shelf"] .dc.on {
+  background:#E9B3C5!important;
+  color:#4D1528!important;
+  border-color:#E9B3C5!important;
+}
+:root[data-who] body .dc.on b,
+:root[data-who] body[data-screen="shelf"] .dc.on b {color:#4D1528!important;}
+:root[data-who] body .dc:not(.on),
+:root[data-who] body[data-screen="shelf"] .dc:not(.on) {
+  background:rgba(255,236,241,.12)!important;
+  border:1px solid rgba(255,236,241,.26)!important;
+  color:#F1D3DD!important;
+}
+:root[data-who] body .dc:not(.on) b,
+:root[data-who] body[data-screen="shelf"] .dc:not(.on) b {color:#FFF0F1!important;}
+
+/* Rijul's coordinated buttery-yellow stripes: front cover and interior only. */
+:root[data-who] .shelf .bkb .bkc {
+  background:repeating-linear-gradient(135deg,var(--orbit-rijul-stripe) 0 11px,transparent 11px 25px),var(--orbit-rijul-cover)!important;
+  color:#493329!important;
+}
+:root[data-who="b"] .bookwrap .paper.book-page {
+  background-color:var(--orbit-rijul-cover)!important;
+  background-image:
+    repeating-linear-gradient(135deg,var(--orbit-rijul-stripe) 0 11px,transparent 11px 25px),
+    radial-gradient(ellipse 100% 82% at 95% 90%,rgba(var(--subject-tint),.35),rgba(var(--subject-tint),.16) 42%,transparent 79%)!important;
+  background-size:auto,cover!important;
+  color:#493329!important;
+}
+
+/* calendar */
+.calbtn{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;position:relative;transform:rotate(-6deg);flex:none}
+.calbtn b{position:absolute;top:3px;right:3px;width:11px;height:11px;border-radius:50%;background:#E8708F;border:2px solid var(--bg)}
+.calg{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cd{aspect-ratio:1;border-radius:14px;display:grid;place-items:center;position:relative;font-weight:700;font-size:14px;min-height:40px}
+.cd.t{box-shadow:inset 0 0 0 2px var(--ink)}
+.cd.on{background:var(--ink);color:var(--card)}
+.cd i{position:absolute;bottom:5px;width:6px;height:6px;border-radius:50%;background:#E8708F}
+.cd i.b{background:#E5A91F}
 </style>
 </head>
 <body>
 <div id="app"></div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
-<script src="config.js?v=2"></script>
 <script>
-const I={home:'<path d="M4 11l8-7 8 7v9H4z"/>',list:'<path d="M9 6h11M9 12h11M9 18h11M4 6l1 1 2-2M4 12l1 1 2-2M4 18l1 1 2-2"/>',plus:'<path d="M12 5v14M5 12h14"/>',heart:'<path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2 4 4 0 0 1 7 2c0 5.5-7 10-7 10z"/>',chart:'<path d="M5 20V10M12 20V4M19 20v-7"/>',cam:'<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>',drop:'<path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/>',cup:'<path d="M5 8h11v6a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5zM16 10h2a2 2 0 0 1 0 4h-2M8 3v2M12 3v2"/>',moon:'<path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/>',sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M5 19l1.5-1.5M17.5 6.5L19 5"/>',back:'<path d="M15 5l-7 7 7 7"/>',arrow:'<path d="M9 5l7 7-7 7"/>',cloud:'<path d="M7 17a4 4 0 0 1 0-8 5 5 0 0 1 9.5-1A4.5 4.5 0 0 1 17 17z"/>',rain:'<path d="M7 14a4 4 0 0 1 0-7 5 5 0 0 1 9.5-1A4 4 0 0 1 17 14zM9 17l-1 3M13 17l-1 3M17 17l-1 3"/>',book:'<path d="M5 4h10a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3zM8 20v-3"/>',fork:'<path d="M7 3v8M5 3v5a2 2 0 0 0 4 0V3M7 11v10M17 3c-2 2-3 5-3 8h3v10"/>',chat:'<path d="M4 5h16v11h-9l-5 4v-4H4z"/><path d="M8 10.5h.01M12 10.5h.01M16 10.5h.01"/>',grid:'<rect x="4" y="4" width="7" height="7" rx="2"/><rect x="13" y="4" width="7" height="7" rx="2"/><rect x="4" y="13" width="7" height="7" rx="2"/><rect x="13" y="13" width="7" height="7" rx="2"/>'};
+/* Main Orbit application: icons, state, UI, features, sync and startup. */
+const I={bell:'<path d="M6 16v-5a6 6 0 0 1 12 0v5l2 2H4zM10 20a2 2 0 0 0 4 0"/>',home:'<path d="M4 11l8-7 8 7v9H4z"/>',list:'<path d="M9 6h11M9 12h11M9 18h11M4 6l1 1 2-2M4 12l1 1 2-2M4 18l1 1 2-2"/>',plus:'<path d="M12 5v14M5 12h14"/>',heart:'<path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2 4 4 0 0 1 7 2c0 5.5-7 10-7 10z"/>',chart:'<path d="M5 20V10M12 20V4M19 20v-7"/>',cam:'<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>',drop:'<path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/>',cup:'<path d="M5 8h11v6a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5zM16 10h2a2 2 0 0 1 0 4h-2M8 3v2M12 3v2"/>',moon:'<path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/>',sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M5 19l1.5-1.5M17.5 6.5L19 5"/>',back:'<path d="M15 5l-7 7 7 7"/>',arrow:'<path d="M9 5l7 7-7 7"/>',cloud:'<path d="M7 17a4 4 0 0 1 0-8 5 5 0 0 1 9.5-1A4.5 4.5 0 0 1 17 17z"/>',rain:'<path d="M7 14a4 4 0 0 1 0-7 5 5 0 0 1 9.5-1A4 4 0 0 1 17 14zM9 17l-1 3M13 17l-1 3M17 17l-1 3"/>',book:'<path d="M5 4h10a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3zM8 20v-3"/>',fork:'<path d="M7 3v8M5 3v5a2 2 0 0 0 4 0V3M7 11v10M17 3c-2 2-3 5-3 8h3v10"/>',chat:'<path d="M4 5h16v11h-9l-5 4v-4H4z"/><path d="M8 10.5h.01M12 10.5h.01M16 10.5h.01"/>',grid:'<rect x="4" y="4" width="7" height="7" rx="2"/><rect x="13" y="4" width="7" height="7" rx="2"/><rect x="4" y="13" width="7" height="7" rx="2"/><rect x="13" y="13" width="7" height="7" rx="2"/>'};
 const ic=(n,s=22)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${I[n]}</svg>`;
 const fl=(c,s,n)=>{let p='';for(let i=0;i<20;i++){const q=i%2?25:30,a=i*Math.PI/10;p+=(i?'L':'M')+(32+q*Math.cos(a)).toFixed(1)+' '+(32+q*Math.sin(a)).toFixed(1)}return `<span class="fl"><svg width="${s}" height="${s}" viewBox="0 0 64 64" aria-hidden="true"><path d="${p}Z" fill="${c}" stroke="${c}" stroke-width="6" stroke-linejoin="round"/></svg>${n?`<i>${ic(n,s*.42)}</i>`:''}</span>`};
 const D=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 const now=new Date(),days=[...Array(7)].map((_,i)=>{const d=new Date(now);d.setDate(d.getDate()-6+i);return d});
 const DEF={a:'Kanan',b:'Rijul'},N={...DEF},RAW={...DEF},esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),applyNicks=()=>{for(const p of['a','b']){RAW[p]=(S.nicks||{})[p]||DEF[p];N[p]=esc(RAW[p])}},E=()=>({water:0,coffee:[],meals:[],bed:'',wake:'',shower:null,mc:false,watched:'',sum:''});
+/* ---------- Daily trackers: water, meals, sleep and habits ---------- */
 function fill(){const e=new Date(now);e.setDate(e.getDate()-6);const k=Object.keys(S.logs).sort()[0],d=k&&k<D(e)?new Date(k+'T00:00:00'):e;while(D(d)<=D(now)){S.logs[D(d)]??={a:E(),b:E()};d.setDate(d.getDate()+1)}}
-let S={me:null,paired:false,day:D(now),logs:{},asks:[],chat:[],gallery:[],ping:null,nicks:{}};fill();let save=()=>true;
-const tmp={wk:0,rt:'',scr:'today',mt:'',na:'',nk:false,sheet:null,pp:null,mp:null,toast:'',inbox:null,sent:null,when:'9 pm',req:true,daily:true};
+let S={me:null,paired:false,day:D(now),logs:{},asks:[],chat:[],events:[],gallery:[],ping:null,nicks:{}};fill();let save=()=>true;
+const tmp={wk:0,rt:'',scr:'shelf',mt:'',na:'',nk:false,sheet:null,pp:null,mp:null,toast:'',inbox:null,sent:null,when:'9 pm',req:true,daily:true};
 const oth=(p=S.me)=>p=='a'?'b':'a',L=(p=S.me,k=S.day)=>S.logs[k][p],clock=()=>new Date().toLocaleTimeString([],{hour:'numeric',minute:'2-digit'});
 const hrs=l=>{if(!l.bed||!l.wake)return null;const[a,b]=l.bed.split(':').map(Number),[c,e]=l.wake.split(':').map(Number);let m=c*60+e-(a*60+b);if(m<=0)m+=1440;return m/60};
 const fh=h=>h==null?'—':`${Math.floor(h)}h ${String(Math.round(h%1*60)).padStart(2,'0')}m`;
@@ -1629,15 +2299,15 @@ const scene=(k,el)=>{document.querySelector('.scn')?.remove();if(!el)return;cons
 const puff=(n,v,w,idx,pid)=>{let k=M[n];if(typeof k=='function')k=k(v,w);if(!k)return;const q=x=>document.querySelector(x),all=[...document.querySelectorAll('#app .c,#app .it')];scene(k,n=='qw'?q('[data-sec=water]'):n=='qc'?q('[data-sec=coffee]'):n=='saved'&&w=='wrap'?q('[data-sec=wrap]'):n=='send'?q('[data-sec=a'+pid+']'):['done','ok','miss','nudge'].includes(n)?q('[data-sec=a'+v+']'):n=='mkask'?[...document.querySelectorAll('[data-sec^=a]')].pop():all[idx])};
 const wdays=()=>[...Array(7)].map((_,i)=>{const d=new Date(now);d.setDate(d.getDate()-6-7*tmp.wk+i);return d});
 const GLP='M18 10h84l-9 124a10 10 0 0 1-10 9H37a10 10 0 0 1-10-9z';
-const gl=()=>{const w=Math.min(L().water,8),y=n=>150-Math.min(n,8)/8*132,go=tmp.fx=='w',f=go&&tmp.wf!=null?y(tmp.wf):y(w);
+const gl=(p)=>{const w=Math.min(L(p).water,8),y=n=>150-Math.min(n,8)/8*132,go=tmp.fx=='w',f=go&&tmp.wf!=null?y(tmp.wf):y(w);
 return`<svg class="gls${go?' go':''}" width="132" height="165" viewBox="0 0 120 150" fill="none" aria-hidden="true"><defs><clipPath id="gcl"><path d="${GLP}"/></clipPath></defs><path d="${GLP}" fill="#fff" fill-opacity=".28"/><g clip-path="url(#gcl)"><g class="lvl" style="--f:${f}px;--t:${y(w)}px"><path class="wv2" d="M-60 0${'q15-6 30 0t30 0'.repeat(5)}V200H-60z" fill="#7CC8EE"/></g><path d="M30 22l-3 56" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".55"/></g><path d="${GLP}" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/></svg>`};
 
-const bun=()=>{const m=L().mc,go=tmp.fx=='mc';
+const bun=(p)=>{const m=L(p).mc,go=tmp.fx=='mc';
 return`<svg class="bg${go?' go':''}" width="150" height="150" viewBox="0 -16 120 126" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M14 84h92v6a10 10 0 0 1-10 10H24a10 10 0 0 1-10-10z" fill="#F6CF55"/><rect x="10" y="68" width="100" height="18" rx="9" fill="#9A5A3C"/><path d="M10 66q10 8 20 0t20 0t20 0t20 0t20 0v4H10z" fill="#C9E58B"/>${m?`<path class="kt" d="M26 63q7-9 14 0t14 0t14 0t14 0" stroke="#E5384F" stroke-width="5" stroke-linecap="round" pathLength="100" stroke-dasharray="100" stroke-dashoffset="${m?0:100}"/>`:''}<g class="kd" fill="#E5384F" stroke="none">${[42,60,78].map(x=>`<ellipse cx="${x}" cy="18" rx="3" ry="5"/>`).join('')}</g><g class="bt"><path d="M12 58a48 42 0 0 1 96 0z" fill="#F6CF55"/>${[[38,28],[60,22],[82,28],[50,36],[72,36]].map(([x,y])=>`<ellipse cx="${x}" cy="${y}" rx="3.4" ry="1.8" fill="#fff" stroke="none" transform="rotate(-20 ${x} ${y})"/>`).join('')}${fc(60,44,m?'^':'ew',m?'smile':'ew')}</g></svg>`};
-const shw=()=>{const s=L().shower,y=s===true,n=s===false;
+const shw=(p)=>{const s=L(p).shower,y=s===true,n=s===false;
 return`<svg width="150" height="150" viewBox="0 0 120 130" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M60 0v10"/><rect x="53" y="8" width="14" height="9" rx="3" fill="#F6CF55"/><path d="M24 40a36 28 0 0 1 72 0z" fill="#F6CF55"/>${y?[36,48,60,72,84].map((x,i)=>`<ellipse cx="${x}" cy="46" rx="2.4" ry="5.5" fill="#7CC8EE" stroke="none" style="animation:fall .8s ${i*.15}s infinite"/>`).join(''):''}<circle cx="60" cy="102" r="24" fill="${n?'#E9F0B8':'#fff'}"/>${fc(60,104,y?'^':n?'ew':'o',y?'smile':n?'ew':'z')}${y?[[34,92,7],[88,90,6],[92,112,5]].map(([x,yy,r],i)=>`<circle class="fb" cx="${x}" cy="${yy}" r="${r}" fill="#fff" style="animation:pin .4s ${.3+i*.2}s both"/>`).join(''):''}${n?[40,60,80].map((x,i)=>`<path d="M${x} 76q-7-7 0-14t0-14" stroke="#8FBF4A" stroke-width="3.5" style="animation:stk 1.3s ${i*.35}s infinite"/>`).join('')+[0,1].map(i=>`<g style="transform-origin:60px 100px;animation:orb ${1.5+i*.5}s linear infinite"><circle cx="${i?28:60}" cy="${i?100:66}" r="2.6" fill="currentColor" stroke="none"/></g>`).join(''):''}</svg>`};
 const thr=w=>{const rr=L(w).rp||[],cs=w==S.me?['Thank you','Love you','Same!']:['Proud of you','Rest up tonight','Tell me more','Miss you'];return`<div class="col" style="gap:8px">${rr.map(m=>`<div class="bub ${m.f==S.me?'me':'th'}">${m.x}<span class="m">${m.f==S.me?'You':N[m.f]} · ${m.t}</span></div>`).join('')}<div class="chps">${cs.map(c=>`<button class="chp" data-a="say:${w}|${c}">${c}</button>`).join('')}</div><div class="rrow"><input class="inp rin" data-i="rt" placeholder="Write a reply…" value="${tmp.rt}"><button class="rb" data-a="say:${w}" aria-label="Send reply">↑</button></div></div>`};
-const cup=()=>`<svg class="cup${tmp.fx=='cof'?' go':''}" width="132" height="165" viewBox="11 -7 48 60" fill="none" stroke="#5A0F1E" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="st" d="M24 15c-4-4 4-7 0-12c-3-3 3-5 0-9"/><path class="st s2" d="M32 15c-4-4 4-7 0-12c-3-3 3-5 0-9"/><path class="st s3" d="M40 15c-4-4 4-7 0-12c-3-3 3-5 0-9"/><path d="M14 28h34v10a14 14 0 0 1-14 14h-6a14 14 0 0 1-14-14z" fill="#FFF8DC"/><path d="M48 31h4a6 6 0 0 1 0 12h-5"/><ellipse cx="31" cy="29" rx="15" ry="2.6" fill="#8A5636" stroke="none"/><g class="lid"><path d="M12 28h38v-4a4 4 0 0 0-4-4H16a4 4 0 0 0-4 4z" fill="#F7C0D0"/><path d="M28 20v-3h6v3"/></g></svg>`;
+const cup=(p)=>`<svg class="cup${tmp.fx=='cof'?' go':''}" width="132" height="165" viewBox="11 -7 48 60" fill="none" stroke="#5A0F1E" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="st" d="M24 15c-4-4 4-7 0-12c-3-3 3-5 0-9"/><path class="st s2" d="M32 15c-4-4 4-7 0-12c-3-3 3-5 0-9"/><path class="st s3" d="M40 15c-4-4 4-7 0-12c-3-3 3-5 0-9"/><path d="M14 28h34v10a14 14 0 0 1-14 14h-6a14 14 0 0 1-14-14z" fill="#FFF8DC"/><path d="M48 31h4a6 6 0 0 1 0 12h-5"/><ellipse cx="31" cy="29" rx="15" ry="2.6" fill="#8A5636" stroke="none"/><g class="lid"><path d="M12 28h38v-4a4 4 0 0 0-4-4H16a4 4 0 0 0-4 4z" fill="#F7C0D0"/><path d="M28 20v-3h6v3"/></g></svg>`;
 const toast=m=>{tmp.toast=m;clearTimeout(tmp.tt);tmp.tt=setTimeout(()=>{tmp.toast='';r()},2000)};
 const head=(t,s='')=>`<div class="row"><button class="rb lt" data-a="go:today" aria-label="Back">${ic('back')}</button><div><h1>${t}</h1>${s?`<div class="mut">${s}</div>`:''}</div></div>`;
 const thumb=(img,n='cam')=>`<span class="th">${img?im(img,'','',1):ic(n,24)}</span>`;
@@ -1671,6 +2341,7 @@ function sleep(){const l=L(),r=days.map(d=>hrs(L(S.me,D(d))));return`${head('Sle
 function wrap(){const l=L();return`${head('What did you <em>watch</em>?')}
 <div class="c yl"><div class="row">${fl('#FFF8DC',44,'book')}<b>Tonight’s watch</b></div><input class="inp wi" data-i="watched" placeholder="A show, a movie, anything…" value="${esc(l.watched)}"></div><button class="pill" data-a="saved">Save it</button>`}
 
+/* ---------- Requests, reminders and proof ---------- */
 function asks(){const me=S.me,ot=oth(),mine=S.asks.filter(a=>a.to==me),theirs=S.asks.filter(a=>a.from==me),sc=p=>{const s=score(p);return`<div class="c ${p=='a'?'pk':'yl'}"><div class="row">${av(p,34)}<b>${N[p]}</b></div><div style="font-size:22px;font-weight:800">${s.k} kept · ${s.m} missed</div></div>`};
 return`<div class="row sp"><h1>Asks <em>&amp; proof</em></h1><button data-a="who" aria-label="Switch phone">${av(ot)}</button></div>
 <h2>From ${N[ot]}</h2>${mine.map(a=>`<div class="c" data-sec="a${a.id}"><div class="row sp"><b>${a.text}</b><span class="mut">${a.daily?'daily':'by '+a.time}</span></div>${a.state=='open'?`<div class="row"><button class="pill" style="flex:1" data-a="${a.photo?'snap':'done'}:${a.id}">${a.photo?ic('cam',20)+'Snap proof':'Done'}</button><button class="pill ln" data-a="miss:${a.id}">Not today</button></div>`:a.state=='done'?`<div class="row">${thumb(a.proof)}<span class="mut">Done · ${a.at}${a.ok?' · approved':''}</span>${a.rx?`<span class="rbadge">${a.rx}</span>`:''}</div>`:'<span class="mut">Marked not today</span>'}</div>`).join('')||'<div class="mut">Nothing from them.</div>'}
@@ -1682,8 +2353,9 @@ function ping(){return`<div><h1>How are <em>you</em>?</h1><div class="mut">right
 <button class="mood" style="background:var(--pink2)" data-a="ping:upset"><span style="position:absolute;right:-18px;top:-18px">${fl('#FCDCE6',110)}</span><span style="position:relative">${ic('rain',44)}</span><b>Upset</b><span class="mut" style="color:#8A2A38">Tell ${N[oth()]} I could use a hand</span></button>
 <div class="it" style="padding:12px 16px">${fl('#FBE48F',34)}<span class="mut">Goes straight to ${N[oth()]}’s phone. Never saved, never counted.</span></div>`}
 
-function sent(){const s=tmp.sent;return`<div class="sentwrap"><div style="width:230px">${SC[s.k]}</div><h1 style="font-size:46px">${N[s.to]} <em>knows</em>.</h1><div class="mut">Switch phones (top right on Today) to see what ${N[s.to]} gets.</div><button class="pill" data-a="go:ping">Done</button><div class="mut">Not saved anywhere.</div></div>`}
+function sent(){const s=tmp.sent;return`<div class="sentwrap"><div style="width:230px">${SC[s.k]}</div><h1 style="font-size:46px">${N[s.to]} <em>knows</em>.</h1><div class="mut">${N[s.to]} will see it on their own phone.</div><button class="pill" data-a="go:ping">Done</button><div class="mut">Not saved anywhere.</div></div>`}
 
+/* ---------- Weekly summaries and photo views ---------- */
 function week(){const days=wdays(),R=p=>days.map(d=>L(p,D(d))),sc=p=>{const s=score(p),t=s.k+s.m;return`<div class="c ${p=='a'?'pk':'yl'}"><b>${N[p]}</b><div><div style="font-size:30px;font-weight:800;line-height:1">${t?Math.round(s.k/t*100):0}%</div><div class="mut">follow-through</div></div><div class="mut">${s.k} kept · ${s.m} missed<br>${R(p).filter(logged).length} of 7 days logged</div></div>`},
 tm=m=>{m=Math.round(m)%1440;const h=Math.floor(m/60);return`${(h+11)%12+1}:${String(m%60).padStart(2,'0')} ${h<12?'am':'pm'}`},
 mins=(l,k)=>{const[h,m]=l[k].split(':').map(Number),x=h*60+m;return k=='bed'&&x<720?x+1440:x},
@@ -1711,8 +2383,10 @@ return`<div style="display:grid;gap:16px;padding-top:30px"><div class="row" styl
 <div class="g2">${['a','b'].map(p=>`<button class="c ${p=='a'?'pk':'yl'}" style="justify-items:start;${w==p?'outline:3px solid #5A0F1E;outline-offset:2px':''}" data-a="pick:${p}">${av(p,40)}<b style="font-size:20px">${DEF[p]}</b></button>`).join('')}</div>
 <input class="inp" type="password" data-i="pw" placeholder="Password" autocomplete="current-password" value="${(tmp.pw||'').replace(/"/g,'&quot;')}"><button class="pill pp" style="height:56px" data-a="signin">Sign in</button>${tmp.err?`<div class="mut" style="text-align:center">${tmp.err}</div>`:''}</div>`}
 
+/* ---------- Book contents, covers and page rendering ---------- */
 function sheets(){let h='';
 if(tmp.sheet=='add')h=`<div class="sh" data-a="sheet:"><div data-stop><h2 style="margin:0">Quick add</h2><div class="q"><button style="background:var(--pink)" data-a="go:eat">${ic('fork',28)}Meal</button><button style="background:var(--yel)" data-a="qw">${ic('drop',28)}Water +1</button><button style="background:var(--pink2)" data-a="qc">${ic('cup',28)}Coffee +1</button><button style="background:var(--card);color:var(--ink)" data-a="go:sleep">${ic('moon',28)}Sleep</button><button style="background:var(--card);color:var(--ink)" data-a="go:wrap">${ic('book',28)}Wrap-up</button><button style="background:var(--yel)" data-a="sheet:ask">${ic('plus',28)}New ask</button><button style="background:var(--pink2);grid-column:1/-1" data-a="go:gal">${ic('grid',28)}Our photos</button></div></div></div>`;
+if(tmp.sheet=='cal')h=calsheet();
 if(tmp.sheet=='name')h=`<div class="sh" data-a="sheet:"><div data-stop><h1 style="font-size:28px">Name your <em>person</em></h1><div class="mut">What do you call them? This name shows on both phones, including their own greeting and notifications.</div><input class="inp" data-i="nm" maxlength="20" value="${esc(tmp.nm||'')}" placeholder="${DEF[oth()]}"><div class="row"><button class="pill" style="flex:1" data-a="rename">Save</button><button class="pill ln" data-a="sheet:">Cancel</button></div></div></div>`;
 if(tmp.sheet=='ask')h=`<div class="sh" data-a="sheet:"><div data-stop><h1 style="font-size:28px">Ask <em>${N[oth()]}</em> to…</h1><textarea rows="3" data-i="na" placeholder="Take a walk after dinner">${tmp.na}</textarea><div class="row"><button class="pill ${tmp.daily?'lt':''}" style="flex:1" data-a="dly:0">Just once</button><button class="pill ${tmp.daily?'':'lt'}" style="flex:1" data-a="dly:1">Every day</button></div><div class="row">${['8 pm','9 pm','10 pm'].map(x=>`<button class="pill ${tmp.when==x?'':'lt'}" style="flex:1;padding:0" data-a="when:${x}">${x}</button>`).join('')}</div><div class="it" style="justify-content:space-between"><div><b>Photo proof</b><div class="mut">${N[oth()]} snaps a photo when it’s done</div></div><button class="sw ${tmp.req?'on':''}" role="switch" aria-checked="${tmp.req}" aria-label="Photo proof" data-a="req"></button></div><button class="pill" data-a="mkask">Send ask to ${N[oth()]}</button></div></div>`;
 if(tmp.proof)h=`<div class="sh" data-a="sheet:"><div data-stop><h1 style="font-size:28px">Show <em>${N[oth()]}</em></h1><div class="mut">${S.asks.find(a=>a.id==tmp.proof).text}</div>${tmp.pp?`<img class="ph" src="${tmp.pp}" alt="Your proof photo"><button class="pill lt" style="border:1px solid var(--line)" data-a="keep:pp">${ic('grid',20)}Save to my Photos</button>`:`<label class="c" style="background:linear-gradient(160deg,#8A1C30,#2A0813);color:#FFE9EE;border:0;min-height:260px;place-items:center;align-content:center;text-align:center;cursor:pointer">${ic('cam',44)}<b>Tap to open the camera</b><span class="mut">The time gets stamped on the photo</span><input type="file" accept="image/*" capture="environment" data-f="proof" style="display:none"></label>`}<div class="row"><button class="pill" style="flex:1;${tmp.pp?'':'opacity:.4'}" data-a="send" ${tmp.pp?'':'disabled'}>Send proof</button><button class="pill ln" data-a="sheet:">Cancel</button></div></div></div>`;
@@ -1723,8 +2397,8 @@ const ask=id=>S.asks.find(a=>a.id==id);
 const fin=(id,img)=>{const a=ask(id);a.state='done';a.proof=img;a.at=clock();a.d++;a.ok=false;tmp.proof=null;tmp.pp=null;tmp.ppp=null;toast('Proof sent')};
 const shrink=(f,stamp,mx=640)=>new Promise(res=>{const i=new Image;i.onerror=()=>res(null);i.onload=()=>{const k=Math.min(1,mx/Math.max(i.width,i.height)),c=document.createElement('canvas');c.width=i.width*k;c.height=i.height*k;const x=c.getContext('2d');x.drawImage(i,0,0,c.width,c.height);if(stamp){const t=new Date().toLocaleString([],{weekday:'short',day:'numeric',month:'short',hour:'numeric',minute:'2-digit'}),fs=Math.round(c.width/20);x.font='700 '+fs+'px sans-serif';x.fillStyle='rgba(0,0,0,.5)';x.fillRect(0,c.height-fs*1.9,c.width,fs*1.9);x.fillStyle='#fff';x.fillText(t,fs*.6,c.height-fs*.6)}res(c.toDataURL('image/jpeg',.72))};i.src=URL.createObjectURL(f)});
 const A={
-go:v=>{tmp.scr=v;tmp.sheet=null;scrollTo(0,0)},pick:v=>{tmp.lw=v;tmp.err=''},signin:()=>{login()},day:v=>{S.day=v},
-who:()=>{tmp.nm=RAW[oth()];tmp.sheet='name'},rename:()=>{const x=(tmp.nm||'').trim().slice(0,20);if(!x)return toast('Type a name first');S.nicks[oth()]=x;applyNicks();tmp.sheet=null;toast(`Now called ${x}`)},keep:v=>{keepPhoto(v)},
+ap:v=>{const n=Math.max(1,Math.ceil(S.gallery.length/APG)),a=tmp.ap||0,c=Math.min(n-1,Math.max(0,a+ +v));if(c==a)return;tmp.old=a;tmp.ap=c;tmp.dir=+v>0?'nx':'pv';clearTimeout(tmp.dt);tmp.dt=setTimeout(()=>{tmp.dir=null;tmp.old=null;if(tmp.scr=='gal')r()},780)},open:v=>{tmp.op=v;setTimeout(()=>{tmp.op=null;if(v=='g'){tmp.scr='gal';tmp.ap=0;tmp.dir=null}else{tmp.scr='book';tmp.bk=v;tmp.pg=null}tmp.turn='tf';r()},650)},pg:v=>{tmp.pg=v||null;tmp.turn=v?'tf':'tb'},bell:v=>{const t=(PG.find(x=>x[0]==v)||[0,'a page'])[1];tmp.inbox=S.ping={from:S.me,to:oth(),k:'bell',what:t,id:Date.now()};toast(`Reminded ${N[oth()]} about ${t}`)},go:v=>{tmp.scr=v;tmp.sheet=null;scrollTo(0,0)},pick:v=>{tmp.lw=v;tmp.err=''},signin:()=>{login()},day:v=>{S.day=v},
+cm:v=>{tmp.cm=(tmp.cm||0)+(+v)},cdp:v=>{tmp.cd=v},ek:v=>{tmp.ek=v;tmp.ey=null},ey:()=>{const k=tmp.ek||'b';tmp.ey=!(tmp.ey!=null?tmp.ey:k=='b')},evdel:v=>{S.events=S.events.filter(e=>e.id!=+v)},evadd:()=>{const x=(tmp.et||'').trim().slice(0,40);if(!x)return toast('Type what it is first');const k=tmp.ek||'b';S.events.push({id:Date.now(),d:tmp.cd||D(now),x,k,y:tmp.ey!=null?tmp.ey:k=='b',f:S.me});tmp.et='';tmp.ey=null;toast('Marked')},who:()=>{tmp.nm=RAW[oth()];tmp.sheet='name'},rename:()=>{const x=(tmp.nm||'').trim().slice(0,20);if(!x)return toast('Type a name first');S.nicks[oth()]=x;applyNicks();tmp.sheet=null;toast(`Now called ${x}`)},keep:v=>{keepPhoto(v)},
 w:v=>{const l=L(),o=l.water;l.water=Math.max(0,o+ +v);tmp.wf=o;tmp.fx='w'},cofm:()=>{L().coffee.pop();tmp.fx='cof'},cof:()=>{L().coffee.push({t:clock()});tmp.fx='cof';toast('Coffee logged')},
 sh:v=>{L().shower=v=='y';tmp.fx='sh'},mc:v=>{L().mc=v=='y';tmp.fx='mc'},
 meal:()=>{const x=tmp.mt.trim();if(!x&&!tmp.mp)return toast('Add a few words or a photo');L().meals.push({t:clock(),x,img:tmp.mpp||null});tmp.mt='';tmp.mp=null;tmp.mpp=null;tmp.fx='meal';toast('Meal added')},
@@ -1747,25 +2421,77 @@ moodrx:v=>{const b=tmp.inbox;if(!b)return;b.rx=b.rx==v?'':v;toast(b.rx?`Sent ${v
 pv:v=>{tmp.view=+v;tmp.pc=null},pvx:()=>{tmp.view=null;tmp.pc=null},pask:v=>{tmp.pc=+v},pno:()=>{tmp.pc=null},
 pdel:v=>{const g=S.gallery.find(x=>x.id==+v);if(!g||g.by!=S.me)return;delImg(g.img);S.gallery=S.gallery.filter(x=>x!==g);tmp.view=null;tmp.pc=null;toast('Photo deleted')},
 signout:async()=>{await sb.auth.signOut();location.reload()},push:()=>{enablePush()}};
+const PG=[['water','Water'],['coffee','Coffee'],['mcd','McDonald’s'],['shower','Shower'],['meals','Meals'],['sleep','Sleep'],['watch','What we watched'],['day','Talk about the day']];
+const pgv=(k,l)=>({water:`${l.water} / 8`,coffee:`${l.coffee.length} cup${l.coffee.length==1?'':'s'}`,mcd:l.mc?'yes':'no',shower:l.shower===true?'yes':l.shower===false?'no':'—',meals:`${l.meals.length} today`,sleep:fh(hrs(l)),watch:l.watched||'—',day:l.sum?'written':'—'})[k];
+const DD={'bka': '<svg class="d d1" viewBox="0 0 60 60"><g fill="#fff" stroke="#E56F96" stroke-width="2"><ellipse cx="30" cy="14" rx="6" ry="10" transform="rotate(0 30 30)"/><ellipse cx="30" cy="14" rx="6" ry="10" transform="rotate(45 30 30)"/><ellipse cx="30" cy="14" rx="6" ry="10" transform="rotate(90 30 30)"/><ellipse cx="30" cy="14" rx="6" ry="10" transform="rotate(135 30 30)"/><ellipse cx="30" cy="14" rx="6" ry="10" transform="rotate(180 30 30)"/><ellipse cx="30" cy="14" rx="6" ry="10" transform="rotate(225 30 30)"/><ellipse cx="30" cy="14" rx="6" ry="10" transform="rotate(270 30 30)"/><ellipse cx="30" cy="14" rx="6" ry="10" transform="rotate(315 30 30)"/></g><circle cx="30" cy="30" r="7" fill="#F6CF55" stroke="#E56F96" stroke-width="2"/></svg><svg class="d d2" viewBox="0 0 40 40"><path d="M20 3l5 12 13 1-10 9 3 13-11-7-11 7 3-13L2 16l13-1z" fill="#FFE27A" stroke="#E56F96" stroke-width="2" stroke-linejoin="round"/></svg><svg class="d d3" viewBox="0 0 70 40"><path d="M16 34a11 11 0 0 1 0-22 14 14 0 0 1 27-3 12 12 0 0 1 13 13 10 10 0 0 1-4 12z" fill="#fff" stroke="#E56F96" stroke-width="2" stroke-linejoin="round"/></svg>', 'bkb': '<svg class="d d1" viewBox="0 0 60 60"><g stroke="#D9901A" stroke-width="3" stroke-linecap="round"><path d="M30 4v8" transform="rotate(0 30 30)"/><path d="M30 4v8" transform="rotate(45 30 30)"/><path d="M30 4v8" transform="rotate(90 30 30)"/><path d="M30 4v8" transform="rotate(135 30 30)"/><path d="M30 4v8" transform="rotate(180 30 30)"/><path d="M30 4v8" transform="rotate(225 30 30)"/><path d="M30 4v8" transform="rotate(270 30 30)"/><path d="M30 4v8" transform="rotate(315 30 30)"/></g><circle cx="30" cy="30" r="13" fill="#FFF3B0" stroke="#D9901A" stroke-width="2.5"/></svg><svg class="d d2" viewBox="0 0 40 40"><path d="M24 2L8 22h10l-4 16 18-22H21z" fill="#F7C0D0" stroke="#D9901A" stroke-width="2.5" stroke-linejoin="round"/></svg><svg class="d d3" viewBox="0 0 70 24"><path d="M3 18l10-12 10 12 10-12 10 12 10-12 10 12" fill="none" stroke="#D9901A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>', 'bkg': '<svg class="d d1" viewBox="0 0 60 48"><rect x="3" y="10" width="54" height="34" rx="8" fill="#F7C0D0" stroke="#fff" stroke-width="2.5"/><path d="M20 10l4-7h12l4 7" fill="#F7C0D0" stroke="#fff" stroke-width="2.5" stroke-linejoin="round"/><circle cx="30" cy="27" r="11" fill="#FFF3F6" stroke="#fff" stroke-width="2.5"/><circle cx="30" cy="27" r="5" fill="#8A1C30"/></svg>'};
+const bk=(k,t,sub,c)=>`<button class="bk ${c}${tmp.op==k?' opening':''}" data-a="open:${k}"><span class="bks"></span><span class="bkc"><span class="lbl"><i>${t}</i><small>${sub}</small></span></span></button>`;
+const APG=4;
+function galbook(){const g=S.gallery,n=Math.max(1,Math.ceil(g.length/APG)),cur=Math.min(tmp.ap||0,n-1),dir=tmp.dir,old=Math.min(tmp.old??cur,n-1),c=!dir&&tmp.turn?tmp.turn:'';tmp.turn=null;
+const pgc=i=>{const xs=g.slice(i*APG,i*APG+APG);return xs.length?`<div class="gg">${xs.map((x,k)=>`<button class="gt${tmp.fx=='gal'&&i==0&&k<tmp.nn?' fresh':''}" data-a="pv:${x.id}" aria-label="Photo from ${N[x.by]}">${im(x.img,'','',1)}<span class="cap">${N[x.by]} · ${new Date(x.t).toLocaleDateString([],{day:'numeric',month:'short'})}</span></button>`).join('')}</div>`:`<div class="mut" style="text-align:center;margin:60px 0">No photos yet. Add the first one!</div>`},
+pp=(i,x='')=>`<div class="paper alb ${x}">${pgc(i)}</div>`,
+under=dir=='pv'?pp(old):pp(cur,c),leaf=dir=='nx'?pp(old,'leaf fo'):dir=='pv'?pp(cur,'leaf fi'):'';
+return`<div class="row sp"><div class="row"><button class="rb lt" data-a="go:shelf" aria-label="Back">${ic('back')}</button><div><h1>Our <em>photos</em></h1><div class="mut">${g.length} photo${g.length==1?'':'s'}</div></div></div><label class="rb pp addp" aria-label="Add photos">${ic('cam',22)}<input type="file" accept="image/*" multiple data-f="gal" style="display:none"></label></div>
+<div class="bookwrap"><div class="stage">${under}${leaf}</div></div>
+<div class="albnav"><button class="rb lt" data-a="ap:-1" aria-label="Previous page" style="${cur?'':'opacity:.35'}">‹</button><span class="mut">page ${cur+1} of ${n} · swipe to flip</span><button class="rb lt" data-a="ap:1" aria-label="Next page" style="${cur<n-1?'':'opacity:.35'}">›</button></div>`}
+let _tx=null;document.addEventListener('touchstart',e=>{_tx=e.target.closest('.alb')?e.touches[0].clientX:null},{passive:true});document.addEventListener('touchend',e=>{if(_tx==null)return;const d=e.changedTouches[0].clientX-_tx;_tx=null;if(Math.abs(d)>60){A.ap(d<0?'1':'-1');r()}});
+const hit=(e,k)=>e.d==k||(e.y&&e.d.slice(5)==k.slice(5));
+const nextOn=e=>{const td=D(now);if(e.d>=td)return e.d;if(!e.y)return null;let y=now.getFullYear(),k=y+e.d.slice(4);if(k<td)k=(y+1)+e.d.slice(4);return k};
+const dd=k=>Math.round((new Date(k+'T00:00:00')-new Date(D(now)+'T00:00:00'))/864e5);
+const upc=()=>S.events.map(e=>({e,k:nextOn(e)})).filter(o=>o.k).sort((a,b)=>a.k<b.k?-1:1);
+const fd=k=>new Date(k+'T00:00:00').toLocaleDateString([],{day:'numeric',month:'short'});
+const CALI=`<svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><rect x="3" y="6" width="24" height="21" rx="6" fill="#fff" stroke="#5A0F1E" stroke-width="2"/><path d="M3 12a6 6 0 0 1 6-6h12a6 6 0 0 1 6 6v1H3z" fill="#F7C0D0"/><path d="M3 13h24" stroke="#5A0F1E" stroke-width="2"/><path d="M10 3v6M20 3v6" stroke="#5A0F1E" stroke-width="2.4" stroke-linecap="round"/><path d="M15 24s-5-3-5-6.2a2.8 2.8 0 0 1 5-1.6 2.8 2.8 0 0 1 5 1.6c0 3.2-5 6.2-5 6.2z" fill="#E8708F"/></svg>`;
+function calsheet(){tmp.cm??=0;tmp.cd??=D(now);const b=new Date(now.getFullYear(),now.getMonth()+tmp.cm,1),y=b.getFullYear(),m=b.getMonth(),n=new Date(y,m+1,0).getDate(),td=D(now);
+ let g='';for(let i=0;i<b.getDay();i++)g+='<span></span>';
+ for(let d=1;d<=n;d++){const k=D(new Date(y,m,d)),es=S.events.filter(e=>hit(e,k));g+=`<button class="cd${k==td?' t':''}${k==tmp.cd?' on':''}" data-a="cdp:${k}" aria-label="${fd(k)}${es.length?', '+es.map(e=>e.x).join(', '):''}">${d}${es.length?`<i class="${es.some(e=>e.k=='b')?'b':''}"></i>`:''}</button>`}
+ const sel=S.events.filter(e=>hit(e,tmp.cd)),up=upc().filter(o=>dd(o.k)<=60).slice(0,3),k=tmp.ek||'b',yr=tmp.ey!=null?tmp.ey:k=='b';
+ return`<div class="sh" data-a="sheet:"><div data-stop><div class="row sp"><button class="rb lt" data-a="cm:-1" aria-label="Earlier month">‹</button><h2 style="margin:0">${b.toLocaleDateString([],{month:'long',year:'numeric'})}</h2><button class="rb lt" data-a="cm:1" aria-label="Later month">›</button></div>
+<div class="calg mut">${'SMTWTFS'.split('').map(x=>`<span style="text-align:center">${x}</span>`).join('')}</div><div class="calg">${g}</div>
+${up.length?`<div class="mut">Coming up: ${up.map(o=>`${esc(o.e.x)} (${dd(o.k)?'in '+dd(o.k)+'d':'today'})`).join(' · ')}</div>`:''}
+<b>${fd(tmp.cd)}</b>${sel.map(e=>`<div class="row sp"><span>${e.k=='b'?'Birthday':'Date'}: ${esc(e.x)}${e.y?' · every year':''}</span><button class="mut" data-a="evdel:${e.id}" aria-label="Remove">remove</button></div>`).join('')||'<div class="mut">Nothing marked yet.</div>'}
+<input class="inp" data-i="et" maxlength="40" placeholder="Rijul’s birthday, our anniversary…" value="${esc(tmp.et||'')}">
+<div class="row" style="flex-wrap:wrap"><button class="pill lt" style="background:${k=='b'?'var(--pink2)':'var(--card)'};border:1px solid var(--line)" data-a="ek:b">Birthday</button><button class="pill lt" style="background:${k=='d'?'var(--yel)':'var(--card)'};border:1px solid var(--line)" data-a="ek:d">Special date</button><button class="pill lt" style="background:${yr?'var(--yel)':'var(--card)'};border:1px solid var(--line)" data-a="ey">${yr?'Every year':'Just once'}</button></div>
+<div class="row"><button class="pill pp" style="flex:1;background:var(--yel)" data-a="evadd">Mark it</button><button class="pill ln" data-a="sheet:">Close</button></div></div></div>`}
+function shelf(){const chips=Object.keys(S.logs).sort().map(k=>{const d=new Date(k+'T00:00:00');return`<button class="dc${k==S.day?' on':''}" data-a="day:${k}"><span>${'SMTWTFS'[d.getDay()]}</span><b>${d.getDate()}</b></button>`}).join(''),mine=p=>S.me==p?'yours · edit':'read only';
+return`<div><div class="row" style="gap:10px"><h1>Our <em>books</em></h1><button class="calbtn" data-a="sheet:cal" aria-label="Our calendar">${CALI}${(upc()[0]&&dd(upc()[0].k)<=7)?'<b></b>':''}</button></div><div class="mut">${new Date(S.day+'T00:00:00').toLocaleDateString([],{weekday:'long',day:'numeric',month:'long'})}</div></div><div class="chips">${chips}</div>
+<div class="shelf">${bk('a',`${N.a}’s book`,mine('a'),'bka')}${bk('b',`${N.b}’s book`,mine('b'),'bkb')}${bk('g','Our photos',`${S.gallery.length} in the grid`,'bkg')}</div>
+<div class="row" style="flex-wrap:wrap">${[['asks','Asks'],['chat','Chat'],['ping','Ping'],['week','Week']].map(([k,t])=>`<button class="pill lt" style="flex:1;border:1px solid var(--line)" data-a="go:${k}">${t}</button>`).join('')}</div>`}
+function book(){const p=tmp.bk,ro=p!=S.me,l=L(p),pg=tmp.pg,cls=tmp.turn||'';tmp.turn=null;
+const bell=k=>ro?`<button class="bellb" data-a="bell:${k}" aria-label="Remind ${N[p]}">${ic('bell',22)}</button>`:'',hd=(t,k)=>`<div class="row sp"><h1>${t}</h1>${bell(k)}</div>`,
+cv=(m,n,x)=>ro?`<b class="cv">${x}</b>`:`<div class="row"><button class="rb lt" data-a="${m}" aria-label="Less">−</button><b class="cv">${x}</b><button class="rb pp" data-a="${n}" aria-label="More">+</button></div>`,
+yn=v=>v===true?'Yes':v===false?'No':'Not yet',
+ml=(ms,o)=>ms.length?ms.slice().reverse().map((m,i)=>`<div class="it">${thumb(m.img,'fork')}<div><div class="mut">${m.t}</div><b>${esc(m.x||'Photo meal')}</b></div>${o?'':m.rx?`<span class="rbadge">${m.rx}</span>`:''}</div>${o?rxr('mealrx',ms.length-1-i,m.rx):''}`).join(''):'<div class="mut">Nothing yet.</div>',
+P={water:()=>`${hd('Water','water')}<div class="live">${gl(p)}${cv('w:-1','w:1',`${l.water}<small> / 8</small>`)}</div>`,
+coffee:()=>`${hd('Coffee','coffee')}<div class="live">${cup(p)}<span class="mut">${l.coffee.length?'last at '+l.coffee[l.coffee.length-1].t:'none yet'}</span>${cv('cofm','cof',l.coffee.length)}</div>`,
+mcd:()=>`${hd('McDonald’s','mcd')}<div class="live">${bun(p)}${ro?`<b class="cv">${yn(l.mc)}</b>`:tg('mc',l.mc)}</div>`,
+shower:()=>`${hd('Shower','shower')}<div class="live">${shw(p)}${ro?`<b class="cv">${yn(l.shower)}</b>`:tg('sh',l.shower)}</div>`,
+meals:()=>`${hd('Meals','meals')}${ro?'':`<div class="col">${tmp.mp?`<img class="ph" src="${tmp.mp}" alt="Your meal">`:''}<textarea rows="3" data-i="mt" placeholder="Describe it, like dosa and sambar">${tmp.mt}</textarea><div class="row"><label class="pill lt">${ic('cam',20)}Photo<input type="file" accept="image/*" data-f="meal"></label><button class="pill" style="flex:1" data-a="meal">Add meal</button></div></div>`}${ml(l.meals,ro)}`,
+sleep:()=>`${hd('Sleep','sleep')}<div class="sl2"><div class="live"><div class="zsc zbed">${SC.sleep}</div><span class="mut">Went to bed</span>${ro?`<b class="cv">${l.bed||'—'}</b>`:`<input class="inp tm" type="time" data-i="bed" value="${l.bed}">`}</div><div class="live"><div class="zsc zwake">${SC.wake}</div><span class="mut">Woke up</span>${ro?`<b class="cv">${l.wake||'—'}</b>`:`<input class="inp tm" type="time" data-i="wake" value="${l.wake}">`}</div></div><div class="live"><span class="mut">Slept</span><div class="big" id="dur">${fh(hrs(l))}</div></div>`,
+watch:()=>`${hd('What we watched','watch')}${ro?`<div class="quote">${esc(l.watched)||'Nothing yet'}</div>`:`<input class="inp wi" data-i="watched" placeholder="A show, a movie, anything…" value="${esc(l.watched)}">`}`,
+day:()=>`${hd('The day','day')}${ro?`${l.sum?`<div class="quote">“${esc(l.sum)}”</div>`:`<span class="mut">${N[p]} hasn’t written yet.</span>`}<div class="rxs">${['❤️','🤗','😂','👏','🥺'].map(e=>`<button class="rx${l.rx==e?' on':''}" data-a="rx:${e}" aria-label="React ${e}">${e}</button>`).join('')}</div>`:`<textarea rows="6" data-i="sum" placeholder="How was your day? Write it like a tiny diary entry.">${esc(l.sum)}</textarea>`}${thr(p)}`};
+const body=pg?P[pg]():`<h1>${N[p]}’s <em>book</em></h1><div class="mut">${ro?`read only · tap the bell to remind ${N[p]}`:'your pages'}</div>${PG.map(([k,t])=>`<div class="ir"><button class="il" data-a="pg:${k}"><b>${t}</b><span class="index-chevron">›</span></button>${bell(k)}</div>`).join('')}`;
+const pageKey=pg||'index';
+const pageNav=`<div class="book-page-nav"><button class="book-nav-button" data-a="${pg?'pg:':'go:shelf'}" aria-label="${pg?'Back to index':'Back to shelf'}">‹ &nbsp;${pg?'Index':'Shelf'}</button><span class="book-page-label">${pg?PG.find(x=>x[0]===pg)?.[1]||'Page':'Contents'}</span></div>`;
+return`<div class="bookwrap"><div class="paper book-page page-${pageKey} ${cls}">${pageNav}<div class="book-page-content">${body}</div></div></div>`}
 const CHIPS=['Miss you','Proud of you','Water time','Call me'];
+/* ---------- Chat and main screen renderer ---------- */
 function chat(){const ot=oth();return`<div class="chatpg"><div class="row sp"><div><h1>Our <em>chat</em></h1><div class="mut">just you and ${N[ot]}</div></div><button data-a="who" aria-label="Switch to ${N[ot]}’s phone">${av(ot)}</button></div>
 <div class="chatlist">${S.chat.length?S.chat.map(m=>`<div class="bub ${m.f==S.me?'me':'th'}">${esc(m.x)}<span class="m">${m.f==S.me?'You':N[m.f]} · ${m.t}</span></div>`).join(''):`<div class="live" style="padding:6px 0"><div style="width:190px">${SC.chat}</div><span class="mut">Say hi to ${N[ot]}</span></div>`}</div>
 <div class="chps">${CHIPS.map(c=>`<button class="chp" data-a="chat:${c}">${c}</button>`).join('')}</div>
 <div class="rrow"><input class="inp rin" data-i="ct" placeholder="Write something sweet…" value="${esc(tmp.ct||'')}"><button class="rb" data-a="chat" aria-label="Send">↑</button></div></div>`}
-const NV=[['today','home','Today'],['asks','list','Asks'],['chat','chat','Chat'],['ping','heart','Ping'],['week','chart','Week']];
-function r(){const app=document.getElementById('app');document.documentElement.dataset.who=S.me;{const m=document.querySelector('meta[name=theme-color]');if(m)m.content=S.me=='a'?'#380000':'#FBE48F'}if(!S.paired){app.innerHTML=pair();return}
-app.classList.toggle('enter',tmp.scr!=tmp.last);tmp.last=tmp.scr;const act={eat:'today',sleep:'today',wrap:'today',gal:'today',sent:'ping'}[tmp.scr]||tmp.scr;let h='';
-if(tmp.inbox&&tmp.inbox.to==S.me){const b=tmp.inbox,f=N[b.from];h+=`<div class="ban"><div class="row">${fl(b.k=='bored'?'#FBE48F':'#F7C0D0',44,b.k=='bored'?'cloud':'rain')}<div><div class="mut">ORBIT · now</div><b>${f} is ${b.k=='bored'?'feeling bored':'upset right now'}.</b><div class="mut">${b.k=='bored'?'Some company would be lovely.':'A kind word would help.'}</div></div></div>${b.rep?`<div class="mut">You said “${b.rep}”</div>`:`<div class="row" style="flex-wrap:wrap">${[`Call ${f}`,'On my way','Send a hug'].map(x=>`<button class="pill" data-a="rep:${x}">${x}</button>`).join('')}</div>`}<div class="rxs">${MX.map(e=>`<button class="rx${b.rx==e?' on':''}" data-a="moodrx:${e}" aria-label="React ${e}">${e}</button>`).join('')}</div><button class="pill" data-a="dis" style="background:none;text-decoration:underline;justify-self:start;padding:0">Dismiss</button></div>`}
+const NV=[['shelf','home','Books'],['asks','list','Asks'],['chat','chat','Chat'],['ping','heart','Ping'],['week','chart','Week']];
+function r(){const app=document.getElementById('app');if(tmp.scr=='today')tmp.scr='shelf';document.body.dataset.screen=tmp.scr;document.documentElement.dataset.who=(tmp.scr=='book'?tmp.bk:S.me);{const m=document.querySelector('meta[name=theme-color]');if(m)m.content=S.me=='a'?'#380000':'#FBE48F'}if(!S.paired){app.innerHTML=pair();return}
+app.classList.toggle('enter',tmp.scr!=tmp.last);tmp.last=tmp.scr;const act={eat:'shelf',sleep:'shelf',wrap:'shelf',gal:'shelf',sent:'ping'}[tmp.scr]||tmp.scr;let h='';
+if(tmp.inbox&&tmp.inbox.to==S.me){const b=tmp.inbox,f=N[b.from];h+=`<div class="ban"><div class="row">${fl(b.k=='bored'?'#FBE48F':'#F7C0D0',44,b.k=='bell'?'heart':b.k=='bored'?'cloud':'rain')}<div><div class="mut">ORBIT · now</div><b>${b.k=='bell'?f+' sent a reminder':f+' is '+(b.k=='bored'?'feeling bored':'upset right now')+'.'}</b><div class="mut">${b.k=='bell'?'Time for: '+b.what+'.':b.k=='bored'?'Some company would be lovely.':'A kind word would help.'}</div></div></div>${b.rep?`<div class="mut">You said “${b.rep}”</div>`:`<div class="row" style="flex-wrap:wrap">${[`Call ${f}`,'On my way','Send a hug'].map(x=>`<button class="pill" data-a="rep:${x}">${x}</button>`).join('')}</div>`}<div class="rxs">${MX.map(e=>`<button class="rx${b.rx==e?' on':''}" data-a="moodrx:${e}" aria-label="React ${e}">${e}</button>`).join('')}</div><button class="pill" data-a="dis" style="background:none;text-decoration:underline;justify-self:start;padding:0">Dismiss</button></div>`}
 if(tmp.inbox&&tmp.inbox.from==S.me&&(tmp.inbox.rx||tmp.inbox.rep)){const b=tmp.inbox;h+=`<div class="ban"><div class="row">${fl('#FBE48F',44,'heart')}<div><div class="mut">ORBIT · now</div><b>${N[b.to]} ${b.rx?'sent '+b.rx:'replied'}${b.rep?(b.rx?' & ':': ')+'“'+b.rep+'”':''}</b></div></div><button class="pill" data-a="dis" style="background:none;text-decoration:underline;justify-self:start;padding:0">Dismiss</button></div>`}
-if(tmp.scr=='today')h+=pushBan();
-h+=({today,eat,sleep,wrap,asks,ping,sent,week,gal:pics,chat}[tmp.scr])();
-h+=`<nav class="nav" aria-label="Main">${NV.map(([k,i,l])=>`<button class="${k=='add'?'plus':act==k?'on':''}" data-a="${k=='add'?'sheet:add':'go:'+k}" aria-label="${l}">${ic(i,k=='add'?26:24)}</button>`).join('')}</nav>`;
+if(tmp.scr=='shelf')h+=pushBan();
+h+=({today,eat,sleep,wrap,asks,ping,sent,week,gal:galbook,chat,shelf,book}[tmp.scr])();
+{const bb=tmp.scr=='shelf'||tmp.scr=='book'?null:['go:shelf','shelf'];if(bb)h+=`<button class="fback" data-a="${bb[0]}" aria-label="Back to ${bb[1]}"><span>‹</span>${bb[1]}</button>`}
 h+=sheets();if(tmp.toast)h+=`<div class="toast" role="status">${tmp.toast}</div>`;app.innerHTML=h;const cs=app.querySelector('.chips'),on=cs&&cs.querySelector('.on');if(on)cs.scrollLeft=on.offsetLeft-cs.clientWidth/2+on.offsetWidth/2;if(tmp.fx){clearTimeout(tmp.ft);tmp.ft=setTimeout(()=>{tmp.fx=null},1600)}}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b||(b.classList.contains('sh')&&e.target.closest('[data-stop]')))return;const s=b.dataset.a,i=s.indexOf(':'),n=i<0?s:s.slice(0,i),v=i<0?'':s.slice(i+1);if(A[n]){const w0=tmp.scr,pid=tmp.proof,sec=b.closest('.c,.it'),idx=sec?[...document.querySelectorAll('#app .c,#app .it')].indexOf(sec):-1;A[n](v);save();r();puff(n,v,w0,idx,pid);notif(n,v,pid)}});
-document.addEventListener('input',e=>{const k=e.target.dataset.i;if(!k)return;const v=e.target.value;if(k=='ct'||k=='mt'||k=='na'||k=='rt'||k=='pw'||k=='nm')tmp[k]=v;else{L()[k]=v;save();if(k=='bed'||k=='wake'){const d=document.getElementById('dur');if(d)d.textContent=fh(hrs(L()))}}});
+document.addEventListener('input',e=>{const k=e.target.dataset.i;if(!k)return;const v=e.target.value;if(k=='ct'||k=='mt'||k=='na'||k=='rt'||k=='pw'||k=='nm'||k=='et')tmp[k]=v;else{L()[k]=v;save();if(k=='bed'||k=='wake'){const d=document.getElementById('dur');if(d)d.textContent=fh(hrs(L()))}}});
 document.addEventListener('change',async e=>{const i=e.target.dataset.i,f=e.target.dataset.f;if(e.target.value&&(i=='bed'||i=='wake')){const z=document.querySelector(i=='bed'?'.zbed':'.zwake');if(z)z.innerHTML=SC[i=='bed'?'sleep':'wake']}if(f=='gal'){const fs=[...e.target.files];if(!fs.length)return;const me=S.me,t=Date.now(),add=[];for(const x of fs){const img=await shrink(x,false,720);if(img)add.push({id:t+add.length,by:me,img:putImg(img),t:t+add.length})}if(!add.length){toast('Couldn’t read that photo');r();return}S.gallery.unshift(...add);if(!save()){S.gallery.splice(0,add.length);toast('Storage is full. Delete a few photos first');r();return}tmp.fx='gal';tmp.nn=add.length;tmp.sheet=null;tmp.scr='gal';scrollTo(0,0);toast(add.length>1?`${add.length} photos added`:'Photo added');r();scene('snap',document.querySelector('[data-sec=gal]'));return}
 if(!f||!e.target.files[0])return;const u=await shrink(e.target.files[0],f=='proof');if(!u)return toast('Couldn’t read that photo');if(f=='meal'){delImg(tmp.mpp);tmp.mp=u;tmp.mpp=putImg(u)}else{delImg(tmp.ppp);tmp.pp=u;tmp.ppp=putImg(u)}r()});
-/* ===== photos (Supabase Storage) ===== */
+/* ---------- Photo storage and signed URLs ---------- */
 const upl=new Set(),urls=new Map(),blobs=new Map();let urlT=Date.now();
 const im=(s,c='',a='',t=0,st='')=>{if(!s)return'';const cl=c?` class="${c}"`:'',sy=st?` style="${st}"`:'';return s.startsWith('data:')?`<img${cl}${sy} src="${s}" alt="${a}">`:`<img${cl}${sy} data-p="${s}"${t?' data-t="1"':''} data-alt="${a}" alt="" loading="lazy" decoding="async">`};
 const keepBtn=p=>p?`<button class="pill lt" style="border:1px solid var(--line)" data-a="keep:${p}" data-save="${p}">${ic('grid',20)}Save to Photos</button>`:'';
@@ -1785,16 +2511,17 @@ async function hydrate(){const els=[...document.querySelectorAll('img[data-p]:no
 function warm(p){if(!blobs.has(p))blobs.set(p,(async()=>{const{data,error}=await sb.storage.from('photos').download(p);if(error)throw error;return data})().catch(e=>{blobs.delete(p);throw e}));return blobs.get(p)}
 async function keepPhoto(v){try{const b=v=='pp'?dataBlob(tmp.pp):await warm(v),f=new File([b],`orbit-${Date.now()}.jpg`,{type:'image/jpeg'});
  if(navigator.canShare&&navigator.canShare({files:[f]}))await navigator.share({files:[f]});else{const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=f.name;a.click()}}catch(e){if(e.name!='AbortError')toast('Couldn’t save the photo')}}
-const _r=r;r=function(){_r();{const tc=document.querySelector('meta[name=theme-color]');if(tc)tc.content=S.me=='a'?'#FFE9F1':'#FBE48F'}if(tmp.scr=='chat')scrollTo(0,document.body.scrollHeight);hydrate();document.querySelectorAll('[data-save]').forEach(b=>warm(b.dataset.save).catch(()=>{}))};
-/* ===== Orbit sync (Supabase) ===== */
+const _r=r;r=function(){document.body.dataset.screen=tmp.scr;_r();{const tc=document.querySelector('meta[name=theme-color]');if(tc)tc.content=S.me=='a'?'#FFE9F1':'#FBE48F'}if(tmp.scr=='chat')scrollTo(0,document.body.scrollHeight);hydrate();document.querySelectorAll('[data-save]').forEach(b=>warm(b.dataset.save).catch(()=>{}))};
+/* ---------- Cloud synchronization ---------- */
 const sb=supabase.createClient(CFG.SUPABASE_URL,CFG.SUPABASE_ANON_KEY);
 const synced=new Map(),mine=new Map(),EMP=JSON.stringify(E());
 const norm=(k,v)=>JSON.stringify(k.startsWith('log:')?{...E(),...v}:v);
-const snap=()=>{const m=new Map();for(const d in S.logs)for(const p of['a','b'])m.set(`log:${d}:${p}`,S.logs[d][p]);S.asks.forEach(a=>m.set('ask:'+a.id,a));S.chat.forEach(c=>m.set('chat:'+c.id,c));S.gallery.forEach(g=>m.set('photo:'+g.id,g));if(S.ping)m.set('ping',S.ping);for(const p of['a','b'])if(S.nicks[p])m.set('nick:'+p,{n:S.nicks[p]});return m};
+const snap=()=>{const m=new Map();for(const d in S.logs)for(const p of['a','b'])m.set(`log:${d}:${p}`,S.logs[d][p]);S.asks.forEach(a=>m.set('ask:'+a.id,a));S.chat.forEach(c=>m.set('chat:'+c.id,c));S.events.forEach(e=>m.set('ev:'+e.id,e));S.gallery.forEach(g=>m.set('photo:'+g.id,g));if(S.ping)m.set('ping',S.ping);for(const p of['a','b'])if(S.nicks[p])m.set('nick:'+p,{n:S.nicks[p]});return m};
 function ap(k,v,del){const[t,x,y]=k.split(':');let j=null;
  if(!del){j=norm(k,v);if(synced.get(k)===j)return false}
  if(t=='log'){if(del)return false;(S.logs[x]??={a:E(),b:E()})[y]={...E(),...v}}
  else if(t=='ask'){S.asks=S.asks.filter(a=>a.id!=x);if(!del)S.asks.push(v);S.asks.sort((a,b)=>a.id-b.id)}
+ else if(t=='ev'){S.events=S.events.filter(e=>e.id!=x);if(!del)S.events.push(v);S.events.sort((a,b)=>a.id-b.id)}
  else if(t=='chat'){S.chat=S.chat.filter(c=>c.id!=x);if(!del)S.chat.push(v);S.chat.sort((a,b)=>a.id-b.id)}
  else if(t=='photo'){S.gallery=S.gallery.filter(g=>g.id!=x);if(!del)S.gallery.push(v);S.gallery.sort((a,b)=>b.id-a.id)}
  else if(t=='nick'){if(del)delete S.nicks[x];else S.nicks[x]=v.n;applyNicks()}
@@ -1816,13 +2543,13 @@ function listen(){sb.channel('orbit-kv').on('postgres_changes',{event:'*',schema
  const del=p.eventType=='DELETE',k=del?p.old.key:p.new.key,v=del?null:p.new.val;
  if(!del&&Date.now()-(mine.get(norm(k,v))||0)<10000)return;
  if(ap(k,v,del)){fill();rr()}}).subscribe()}
-/* login */
+/* ---------- Authentication and pairing ---------- */
 async function login(){const p=tmp.lw;if(!p)return toast('Pick who you are');if(!tmp.pw)return toast('Enter the password');
  const{data,error}=await sb.auth.signInWithPassword({email:p=='a'?CFG.EMAIL_A:CFG.EMAIL_B,password:tmp.pw});
  if(error){console.error(error);tmp.err='Couldn’t sign in: '+(error.message||'unknown error');return r()}tmp.pw='';tmp.err='';await enter(data.session.user.email)}
 async function enter(email){S.me=email==CFG.EMAIL_A?'a':'b';S.paired=true;tmp.loading=true;r();await load();listen();tmp.loading=false;
  r();if(window.Notification&&Notification.permission=='granted')enablePush(true)}
-/* push */
+/* ---------- Push notifications ---------- */
 const standalone=()=>navigator.standalone||matchMedia('(display-mode: standalone)').matches;
 const u8=b=>{const s=atob((b+'='.repeat((4-b.length%4)%4)).replace(/-/g,'+').replace(/_/g,'/'));return Uint8Array.from(s,c=>c.charCodeAt(0))};
 async function enablePush(quiet){try{
@@ -1839,6 +2566,7 @@ function pushBan(){if(tmp.scr!='today')return'';
 function notif(n,v,pid){const me=RAW[S.me],ot=oth(),a=id=>ask(+id)?.text||'';let m;
  switch(n){
  case'ping':m=[`${me} is ${v=='bored'?'feeling bored':'upset right now'}`,v=='bored'?'Some company would be lovely.':'A kind word would help.'];break;
+ case'bell':m=[`${me} sent you a reminder`,`Time for: ${(PG.find(x=>x[0]==v)||[0,'your book'])[1]}`];break;
  case'nudge':m=[`${me} nudged you`,a(v)];break;
  case'mkask':{const x=S.asks[S.asks.length-1];if(x&&x.id>Date.now()-3000)m=[`New ask from ${me}`,x.text];break}
  case'send':m=[`${me} sent proof`,a(pid)];break;
@@ -1853,10 +2581,11 @@ function notif(n,v,pid){const me=RAW[S.me],ot=oth(),a=id=>ask(+id)?.text||'';let
  case'moodrx':if(tmp.inbox?.rx)m=[`${me} sent ${tmp.inbox.rx}`,''];break;
  case'rep':m=[`${me} replied`,v];break;
  case'chat':{const x=S.chat[S.chat.length-1];if(x&&x.f==S.me&&Date.now()-x.id<3000)m=[`${me} says`,x.x];break}
+ case'evadd':{const x=S.events[S.events.length-1];if(x&&x.id>Date.now()-3000)m=[`${me} marked a date`,`${x.x} · ${fd(x.d)}`];break}
  case'rename':m=[`${me} named you ${RAW[ot]}`,'Open Orbit to see it'];break}
  if(m)sb.functions.invoke('notify',{body:{to:ot,title:m[0],body:m[1]}}).catch(()=>{})}
 document.addEventListener('keydown',e=>{if(e.key=='Enter'&&e.target.dataset&&e.target.dataset.i=='ct'){e.preventDefault();A.chat('');save();r();notif('chat','')}});
-/* boot */
+/* ---------- App startup and lifecycle ---------- */
 document.addEventListener('visibilitychange',async()=>{if(document.visibilityState!='visible'||!S.paired)return;
  if(D(new Date())!=D(now))return location.reload();if(Date.now()-urlT>432e5){urls.clear();urlT=Date.now()}await flush();if(await load())rr()});
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js');
