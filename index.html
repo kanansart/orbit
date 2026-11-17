@@ -20,10 +20,14 @@
  * QUICK MAP
  *   1. Base design tokens, global elements and UI components
  *   2. Book covers, paper, photo album and animations
+ *   3. Feature-specific and historical visual refinements
+ *   4. CURRENT THEME: final palette, app canvas, navigation, dates,
+ *      Rijul's cover and matching interior stripes
+ *
  * CSS is intentionally kept in its original cascade order. Moving
  * overlapping selectors can change the design even when their
  * declarations look identical. Edit CURRENT THEME for colours.
- * User a; user b .
+ * User a = Kanan; user b = Rijul.
  */
 
 :root {
@@ -2134,7 +2138,13 @@ body[data-screen="shelf"] .shelf .bkc {box-shadow:6px 9px 22px rgba(16,0,7,.38),
 }
 :root[data-who="b"] .nav button.on {background:#B89B4A!important;color:#30241C!important;}
 
-   
+/* =============================================================
+ * 4. CURRENT THEME | EDIT THESE COLOURS FIRST
+ * =============================================================
+ * Shared canvas is burgundy. Kanan keeps pink dots; Rijul keeps
+ * buttery yellow diagonal stripes on the cover AND inside pages.
+ * Shared navigation and date chips do not inherit Rijul's ochre.
+ */
 :root {
   --orbit-burgundy-top: #72243A;
   --orbit-burgundy-mid: #5B172B;
@@ -2241,6 +2251,37 @@ body[data-screen="shelf"] .shelf .bkc {box-shadow:6px 9px 22px rgba(16,0,7,.38),
 .cd.on{background:var(--ink);color:var(--card)}
 .cd i{position:absolute;bottom:5px;width:6px;height:6px;border-radius:50%;background:#E8708F}
 .cd i.b{background:#E5A91F}
+
+/* keyboard, sheets and calendar polish */
+body.kb .nav,body.kb .fback{display:none}
+body.kb #app{padding-bottom:28px}
+.sh{inset:auto;top:var(--vvt,0px);left:0;right:0;height:var(--vvh,100dvh)}
+.sh>div{max-height:calc(var(--vvh,100dvh)*.92);overscroll-behavior:contain}
+.sh.calsh{background:rgba(90,15,30,.10)}
+.sh>.calp{background:rgba(242,198,213,.78);background:color-mix(in srgb,var(--bg) 72%,transparent);-webkit-backdrop-filter:blur(18px) saturate(1.2);backdrop-filter:blur(18px) saturate(1.2);border:1px solid var(--line);border-bottom:0}
+.calbtn{width:60px;height:60px;border-radius:20px;margin-right:2px}
+.calbtn svg{width:44px;height:44px}
+.calbtn b{top:5px;right:5px;width:13px;height:13px}
+
+/* fit the screen: safe areas counted once, no accidental page scroll */
+:root{padding-top:0;padding-bottom:0}
+html,body{overscroll-behavior-y:none;overflow-x:hidden}
+#app{padding-top:calc(18px + env(safe-area-inset-top,0px));padding-bottom:calc(72px + env(safe-area-inset-bottom,0px));min-height:100dvh}
+body[data-screen="shelf"] #app{padding-bottom:calc(24px + env(safe-area-inset-bottom,0px))}
+body.kb #app{padding-bottom:28px}
+body[data-screen="chat"] .chatpg{min-height:calc(100dvh - 18px - env(safe-area-inset-top,0px) - 72px - env(safe-area-inset-bottom,0px))}
+
+/* Books screen: size the books from the screen height so everything fits */
+body[data-screen="shelf"] .shelf{gap:14px 18px;padding:4px 2px 0}
+body[data-screen="shelf"] .bk{aspect-ratio:auto;height:clamp(150px,27dvh,250px)}
+body[data-screen="shelf"] .bkg{height:clamp(96px,16dvh,160px)}
+
+/* readable text on sheets: dark text on Kanan's pink, cream on Rijul's brown */
+:root[data-who="a"] .sh>div{color:#51263A}
+:root[data-who="b"] .sh>div{color:#F8F0DB}
+.calp .mut{color:inherit;opacity:.72}
+.cd.on{background:#FBE48F;color:#3A1020}
+.cd.t{box-shadow:inset 0 0 0 2px currentColor}
 </style>
 </head>
 <body>
@@ -2406,7 +2447,7 @@ saved:()=>{tmp.fx='saved';toast('Saved');tmp.scr='today';scrollTo(0,0)},
 snap:v=>{tmp.proof=+v;tmp.pp=null;tmp.ppp=null},done:v=>fin(+v,null),send:()=>fin(tmp.proof,tmp.ppp),
 miss:v=>{const a=ask(+v);a.state='missed';a.m++;toast('Marked not today')},nudge:()=>toast(`Nudged ${N[oth()]}`),
 ok:v=>{ask(+v).ok=true;toast('Approved')},no:v=>{const a=ask(+v);a.state='open';a.proof=null;a.d=Math.max(0,a.d-1);toast(`Sent back to ${N[oth()]}`)},
-chat:v=>{const x=(v||tmp.ct||'').trim();if(!x)return;S.chat.push({id:Date.now(),f:S.me,x,t:clock()});tmp.ct=''},
+chat:v=>{const x=(v||tmp.ct||'').trim();if(!x)return;tmp.refocus=!v&&!!(document.activeElement&&document.activeElement.dataset&&document.activeElement.dataset.i=='ct');S.chat.push({id:Date.now(),f:S.me,x,t:clock()});tmp.ct=''},
 sheet:v=>{tmp.sheet=v||null;tmp.proof=null},qw:()=>{tmp.wf=L().water++;tmp.fx='w';tmp.scr='today';tmp.sheet=null;toast('Glass added')},qc:()=>{L().coffee.push({t:clock()});tmp.fx='cof';tmp.scr='today';tmp.sheet=null;toast('Coffee logged')},
 dly:v=>{tmp.daily=v=='1'},when:v=>{tmp.when=v},req:()=>{tmp.req=!tmp.req},
 mkask:()=>{const x=tmp.na.trim();if(!x)return toast('What would you like to ask?');S.asks.push({id:Date.now(),from:S.me,to:oth(),text:x,daily:tmp.daily,time:tmp.when,photo:tmp.req,state:'open',d:0,m:0});tmp.na='';tmp.sheet=null;tmp.scr='asks';toast(`Sent to ${N[oth()]}`)},
@@ -2444,15 +2485,15 @@ function calsheet(){tmp.cm??=0;tmp.cd??=D(now);const b=new Date(now.getFullYear(
  let g='';for(let i=0;i<b.getDay();i++)g+='<span></span>';
  for(let d=1;d<=n;d++){const k=D(new Date(y,m,d)),es=S.events.filter(e=>hit(e,k));g+=`<button class="cd${k==td?' t':''}${k==tmp.cd?' on':''}" data-a="cdp:${k}" aria-label="${fd(k)}${es.length?', '+es.map(e=>e.x).join(', '):''}">${d}${es.length?`<i class="${es.some(e=>e.k=='b')?'b':''}"></i>`:''}</button>`}
  const sel=S.events.filter(e=>hit(e,tmp.cd)),up=upc().filter(o=>dd(o.k)<=60).slice(0,3),k=tmp.ek||'b',yr=tmp.ey!=null?tmp.ey:k=='b';
- return`<div class="sh" data-a="sheet:"><div data-stop><div class="row sp"><button class="rb lt" data-a="cm:-1" aria-label="Earlier month">‹</button><h2 style="margin:0">${b.toLocaleDateString([],{month:'long',year:'numeric'})}</h2><button class="rb lt" data-a="cm:1" aria-label="Later month">›</button></div>
+ return`<div class="sh calsh" data-a="sheet:"><div data-stop class="calp"><div class="row sp"><button class="rb lt" data-a="cm:-1" aria-label="Earlier month">‹</button><h2 style="margin:0">${b.toLocaleDateString([],{month:'long',year:'numeric'})}</h2><button class="rb lt" data-a="cm:1" aria-label="Later month">›</button></div>
 <div class="calg mut">${'SMTWTFS'.split('').map(x=>`<span style="text-align:center">${x}</span>`).join('')}</div><div class="calg">${g}</div>
 ${up.length?`<div class="mut">Coming up: ${up.map(o=>`${esc(o.e.x)} (${dd(o.k)?'in '+dd(o.k)+'d':'today'})`).join(' · ')}</div>`:''}
 <b>${fd(tmp.cd)}</b>${sel.map(e=>`<div class="row sp"><span>${e.k=='b'?'Birthday':'Date'}: ${esc(e.x)}${e.y?' · every year':''}</span><button class="mut" data-a="evdel:${e.id}" aria-label="Remove">remove</button></div>`).join('')||'<div class="mut">Nothing marked yet.</div>'}
 <input class="inp" data-i="et" maxlength="40" placeholder="Rijul’s birthday, our anniversary…" value="${esc(tmp.et||'')}">
-<div class="row" style="flex-wrap:wrap"><button class="pill lt" style="background:${k=='b'?'var(--pink2)':'var(--card)'};border:1px solid var(--line)" data-a="ek:b">Birthday</button><button class="pill lt" style="background:${k=='d'?'var(--yel)':'var(--card)'};border:1px solid var(--line)" data-a="ek:d">Special date</button><button class="pill lt" style="background:${yr?'var(--yel)':'var(--card)'};border:1px solid var(--line)" data-a="ey">${yr?'Every year':'Just once'}</button></div>
-<div class="row"><button class="pill pp" style="flex:1;background:var(--yel)" data-a="evadd">Mark it</button><button class="pill ln" data-a="sheet:">Close</button></div></div></div>`}
+<div class="row" style="flex-wrap:wrap"><button class="pill lt" style="background:${k=='b'?'#F7C0D0':'rgba(255,255,255,.6)'};color:#3A1020;border:1px solid var(--line)" data-a="ek:b">Birthday</button><button class="pill lt" style="background:${k=='d'?'#FBE48F':'rgba(255,255,255,.6)'};color:#3A1020;border:1px solid var(--line)" data-a="ek:d">Special date</button><button class="pill lt" style="background:${yr?'#FBE48F':'rgba(255,255,255,.6)'};color:#3A1020;border:1px solid var(--line)" data-a="ey">${yr?'Every year':'Just once'}</button></div>
+<div class="row"><button class="pill pp" style="flex:1;background:var(--yel)" data-a="evadd">Mark it</button><button class="pill ln" style="background:transparent;color:inherit;border:1.5px solid currentColor" data-a="sheet:">Close</button></div></div></div>`}
 function shelf(){const chips=Object.keys(S.logs).sort().map(k=>{const d=new Date(k+'T00:00:00');return`<button class="dc${k==S.day?' on':''}" data-a="day:${k}"><span>${'SMTWTFS'[d.getDay()]}</span><b>${d.getDate()}</b></button>`}).join(''),mine=p=>S.me==p?'yours · edit':'read only';
-return`<div><div class="row" style="gap:10px"><h1>Our <em>books</em></h1><button class="calbtn" data-a="sheet:cal" aria-label="Our calendar">${CALI}${(upc()[0]&&dd(upc()[0].k)<=7)?'<b></b>':''}</button></div><div class="mut">${new Date(S.day+'T00:00:00').toLocaleDateString([],{weekday:'long',day:'numeric',month:'long'})}</div></div><div class="chips">${chips}</div>
+return`<div class="row sp" style="align-items:flex-start"><div><h1>Our <em>books</em></h1><div class="mut">${new Date(S.day+'T00:00:00').toLocaleDateString([],{weekday:'long',day:'numeric',month:'long'})}</div></div><button class="calbtn" data-a="sheet:cal" aria-label="Our calendar">${CALI}${(upc()[0]&&dd(upc()[0].k)<=7)?'<b></b>':''}</button></div><div class="chips">${chips}</div>
 <div class="shelf">${bk('a',`${N.a}’s book`,mine('a'),'bka')}${bk('b',`${N.b}’s book`,mine('b'),'bkb')}${bk('g','Our photos',`${S.gallery.length} in the grid`,'bkg')}</div>
 <div class="row" style="flex-wrap:wrap">${[['asks','Asks'],['chat','Chat'],['ping','Ping'],['week','Week']].map(([k,t])=>`<button class="pill lt" style="flex:1;border:1px solid var(--line)" data-a="go:${k}">${t}</button>`).join('')}</div>`}
 function book(){const p=tmp.bk,ro=p!=S.me,l=L(p),pg=tmp.pg,cls=tmp.turn||'';tmp.turn=null;
@@ -2511,7 +2552,7 @@ async function hydrate(){const els=[...document.querySelectorAll('img[data-p]:no
 function warm(p){if(!blobs.has(p))blobs.set(p,(async()=>{const{data,error}=await sb.storage.from('photos').download(p);if(error)throw error;return data})().catch(e=>{blobs.delete(p);throw e}));return blobs.get(p)}
 async function keepPhoto(v){try{const b=v=='pp'?dataBlob(tmp.pp):await warm(v),f=new File([b],`orbit-${Date.now()}.jpg`,{type:'image/jpeg'});
  if(navigator.canShare&&navigator.canShare({files:[f]}))await navigator.share({files:[f]});else{const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=f.name;a.click()}}catch(e){if(e.name!='AbortError')toast('Couldn’t save the photo')}}
-const _r=r;r=function(){document.body.dataset.screen=tmp.scr;_r();{const tc=document.querySelector('meta[name=theme-color]');if(tc)tc.content=S.me=='a'?'#FFE9F1':'#FBE48F'}if(tmp.scr=='chat')scrollTo(0,document.body.scrollHeight);hydrate();document.querySelectorAll('[data-save]').forEach(b=>warm(b.dataset.save).catch(()=>{}))};
+const _r=r;r=function(){document.body.dataset.screen=tmp.scr;_r();{const tc=document.querySelector('meta[name=theme-color]');if(tc)tc.content=S.me=='a'?'#FFE9F1':'#FBE48F'}if(tmp.scr=='chat'&&(tmp.pscr!='chat'||S.chat.length!=tmp.cl))scrollTo(0,document.body.scrollHeight);tmp.pscr=tmp.scr;tmp.cl=S.chat.length;if(tmp.refocus){tmp.refocus=0;const ci=document.querySelector('input[data-i=ct]');if(ci)ci.focus({preventScroll:true})}hydrate();document.querySelectorAll('[data-save]').forEach(b=>warm(b.dataset.save).catch(()=>{}))};
 /* ---------- Cloud synchronization ---------- */
 const sb=supabase.createClient(CFG.SUPABASE_URL,CFG.SUPABASE_ANON_KEY);
 const synced=new Map(),mine=new Map(),EMP=JSON.stringify(E());
@@ -2585,6 +2626,10 @@ function notif(n,v,pid){const me=RAW[S.me],ot=oth(),a=id=>ask(+id)?.text||'';let
  case'rename':m=[`${me} named you ${RAW[ot]}`,'Open Orbit to see it'];break}
  if(m)sb.functions.invoke('notify',{body:{to:ot,title:m[0],body:m[1]}}).catch(()=>{})}
 document.addEventListener('keydown',e=>{if(e.key=='Enter'&&e.target.dataset&&e.target.dataset.i=='ct'){e.preventDefault();A.chat('');save();r();notif('chat','')}});
+/* ---------- Keyboard handling (iPhone) ---------- */
+document.addEventListener('focusin',e=>{if(/INPUT|TEXTAREA/.test(e.target.tagName))document.body.classList.add('kb')});
+document.addEventListener('focusout',()=>setTimeout(()=>{if(!/INPUT|TEXTAREA/.test(document.activeElement.tagName))document.body.classList.remove('kb')},60));
+if(window.visualViewport){const vv=visualViewport,f=()=>{const s=document.documentElement.style;s.setProperty('--vvh',vv.height+'px');s.setProperty('--vvt',vv.offsetTop+'px')};vv.addEventListener('resize',f);vv.addEventListener('scroll',f);f()}
 /* ---------- App startup and lifecycle ---------- */
 document.addEventListener('visibilitychange',async()=>{if(document.visibilityState!='visible'||!S.paired)return;
  if(D(new Date())!=D(now))return location.reload();if(Date.now()-urlT>432e5){urls.clear();urlT=Date.now()}await flush();if(await load())rr()});
